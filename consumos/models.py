@@ -5,6 +5,14 @@ from huespedes.models import Huesped
 from django.core.validators import MinValueValidator
 from productos.models import Producto
 
+from rest_framework import viewsets
+from .serializers import HuespedSerializer
+
+class HuespedViewSet(viewsets.ModelViewSet):
+    queryset = Huesped.objects.all()
+    serializer_class = HuespedSerializer
+
+
 class Consumo(models.Model):
     """
     Modelo para representar el consumo de productos en una habitación por un huésped.

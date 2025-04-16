@@ -1,6 +1,8 @@
 from django.db import models
 from habitaciones.models import Habitacion
 
+
+
 class Huesped(models.Model):
     TIPO_DOCUMENTO_CHOICES = [
         ('Cedula de ciudadania', 'Cedula de ciudadania'),
