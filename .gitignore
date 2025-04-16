@@ -17,3 +17,4 @@ db.sqlite3
 *.pot
 *.pyc
 .DS_Store
+

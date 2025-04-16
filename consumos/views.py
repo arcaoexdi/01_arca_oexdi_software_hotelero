@@ -3,7 +3,19 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from .forms import ConsumoForm
+from rest_framework import viewsets
+
 from .models import Consumo, Habitacion
+
+# consumos/views.py
+from .serializers import HuespedSerializer
+
+
+class ConsumoViewSet(viewsets.ModelViewSet):
+    queryset = Consumo.objects.all()
+    serializer_class = HuespedSerializer
+
+
 
 class ConsumoListView(ListView):
     model = Consumo

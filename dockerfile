@@ -1,7 +1,9 @@
 # Usa Python en Alpine para una imagen más ligera
 FROM python:3.11.11-alpine3.21
 
-ENV PYTHONNUNBUFFERED = 
+# Eliminar los espacios extra aquí
+ENV PYTHONUNBUFFERED=1  
+
 # Establece el directorio de trabajo
 WORKDIR /app
 

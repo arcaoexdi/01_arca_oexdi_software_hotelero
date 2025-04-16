@@ -11,7 +11,25 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
 import os
+from decouple import Config
+
+
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
+
+# Usar la variable de entorno para el SECRET_KEY
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+
+# Cargar variables de entorno desde el archivo .env
+config = Config()
+
+# Utilizar la variable de entorno DJANGO_SECRET_KEY
+
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'ClaveSecreta')
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
