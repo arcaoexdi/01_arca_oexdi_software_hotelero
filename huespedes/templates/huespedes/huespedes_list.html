@@ -1,0 +1,58 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-white">{{ 'Huéspedes alojados' }}</h2>
+    {% if habitacion %}
+      <a href="{% url 'huespedes:huesped_create' habitacion_id=habitacion.id %}" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm">
+        <i class="bi bi-person-plus-fill me-1"></i> Nuevo huésped
+      </a>
+    {% else %}
+      <div class="alert alert-info text-center" role="alert">
+        No hay habitación seleccionada.
+      </div>
+    {% endif %}
+  </div>
+
+  {% if huespedes %}
+    <div class="list-group shadow-sm">
+      {% for huesped in huespedes %}
+        <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3" style="background-color: #f8f9fa; color: #212529; border-radius: 15px;">
+          <div>
+            <h5 class="mb-1">{{ huesped.nombre }} {{ huesped.apellido }}</h5>
+            <small class="text-muted">Habitación: {{ huesped.habitacion.numero }}</small>
+          </div>
+          <div class="btn-group">
+            <!-- Ver detalle -->
+            <a href="{% url 'huespedes:huesped_detail' pk=huesped.pk %}" class="btn btn-sm btn-outline-primary">
+              <i class="bi bi-eye"></i> Ver
+            </a>
+            <!-- Editar huésped -->
+            <a href="{% url 'huespedes:huesped_edit' pk=huesped.pk %}" class="btn btn-sm btn-outline-warning">
+              <i class="bi bi-pencil-square"></i> Editar
+            </a>
+            <!-- Eliminar huésped -->
+            <a href="{% url 'huespedes:huesped_delete' pk=huesped.pk %}" class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-trash"></i> Eliminar
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center" role="alert">
+      No hay huéspedes registrados aún en esta habitación.
+    </div>
+
+    {% if habitacion %}
+      <div class="text-center mt-4">
+        <a href="{% url 'huespedes:huesped_create' habitacion_id=habitacion.id %}" class="btn btn-primary btn-lg rounded-pill" style="background-color: #007BFF; border-color: #007BFF;">
+          <i class="bi bi-person-plus-fill me-2"></i> Registrar primer huésped
+        </a>
+      </div>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

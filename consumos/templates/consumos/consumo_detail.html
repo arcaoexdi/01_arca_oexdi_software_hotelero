@@ -1,0 +1,34 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-body p-5">
+                    <h2 class="text-center mb-4 fw-bold text-primary">🧾 Detalle del Consumo</h2>
+
+                    <ul class="list-group list-group-flush fs-5">
+                        <li class="list-group-item"><strong>👤 Huésped:</strong> {{ consumo.huesped }}</li>
+                        <li class="list-group-item"><strong>🛒 Producto:</strong> {{ consumo.producto }}</li>
+                        <li class="list-group-item"><strong>🔢 Cantidad:</strong> {{ consumo.cantidad }}</li>
+                        <li class="list-group-item"><strong>📅 Fecha:</strong> {{ consumo.fecha }}</li>
+                    </ul>
+
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <a href="{% url 'consumos:consumo_update' consumo.pk %}" class="btn btn-outline-warning">
+                            ✏️ Editar
+                        </a>
+                        <a href="{% url 'consumos:consumo_delete' consumo.pk %}" class="btn btn-outline-danger">
+                            🗑 Eliminar
+                        </a>
+                        <a href="{% url 'consumos:consumo_list' %}" class="btn btn-outline-secondary">
+                            ↩️ Volver
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

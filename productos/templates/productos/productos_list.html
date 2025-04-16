@@ -1,0 +1,106 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<style>
+    .btn {
+        border-radius: 10px;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-hover i {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .btn-hover:hover i {
+        transform: translateX(5px);
+    }
+
+    .d-flex.flex-column.gap-3 > .btn {
+        margin-bottom: 10px;
+    }
+
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 1rem;
+    }
+
+    .producto-img-container {
+        position: relative;
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+    }
+
+    .producto-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    @media (max-width: 768px) {
+        .col-lg-3 {
+            max-width: 100%;
+        }
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4 text-light">Lista de Productos</h1>
+
+    <div class="d-flex justify-content-end mb-4">
+        <a href="{% url 'productos:producto_form' %}" class="btn btn-lg btn-primary text-white px-5 py-3 rounded-pill shadow-lg fw-bold btn-hover">
+            <i class="bi bi-plus-circle me-2"></i> Crear Producto
+        </a>
+    </div>
+
+    <div class="row g-4">
+        {% for producto in productos %}
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card shadow-lg rounded border-0 overflow-hidden">
+                    <div class="producto-img-container p-3">
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" class="producto-img" alt="{{ producto.nombre }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/200x200?text=No+Imagen" class="producto-img" alt="{{ producto.nombre }}">
+                        {% endif %}
+                    </div>
+                    <div class="card-body bg-light text-dark">
+                        <h5 class="card-title text-center">{{ producto.nombre }}</h5>
+                        <p class="card-text text-center">{{ producto.descripcion|truncatewords:10 }}</p>
+                        <p class="card-text text-center"><strong>Precio:</strong> ${{ producto.precio|floatformat:2 }}</p>
+
+                        <div class="d-flex flex-column gap-3 mt-3">
+                            <a href="{% url 'productos:producto_detail' producto.pk %}" class="btn btn-info btn-sm w-100 rounded-3" aria-label="Ver detalles del producto {{ producto.nombre }}">Ver Detalles</a>
+                            <a href="{% url 'productos:producto_form' producto.pk %}" class="btn btn-warning btn-sm w-100 rounded-3" aria-label="Editar el producto {{ producto.nombre }}">Editar</a>
+                            <a href="{% url 'productos:producto_confirm' producto.pk %}" class="btn btn-danger btn-sm w-100 rounded-3" aria-label="Eliminar el producto {{ producto.nombre }}">Eliminar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted lead"><strong>No hay productos disponibles en este momento.</strong></p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

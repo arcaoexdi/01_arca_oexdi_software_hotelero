@@ -1,0 +1,168 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<style>
+  /* 🎨 Estética general */
+  .text-gradient {
+    color: #f5f5f5; /* blanco-gris claro */
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.6),
+                 0 0 10px rgba(200, 200, 200, 0.4);
+    animation: shine-text 4s infinite ease-in-out;
+  }
+  
+  @keyframes shine-text {
+    0% {
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.4),
+                   0 0 12px rgba(180, 180, 180, 0.2);
+    }
+    50% {
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                   0 0 20px rgba(200, 200, 200, 0.5);
+    }
+    100% {
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.4),
+                   0 0 12px rgba(180, 180, 180, 0.2);
+    }
+  }
+  
+
+  @keyframes shine {
+    0% {
+      background-position: -200px;
+    }
+    100% {
+      background-position: 200px;
+    }
+  }
+
+  .bg-glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(14px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .hover-scale {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .hover-scale:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 12px 22px rgba(0, 0, 0, 0.15);
+  }
+
+  /* 🌟 Botón pulsante */
+  .pulse-btn {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(218, 165, 32, 0.5);
+    }
+    70% {
+      box-shadow: 0 0 0 20px rgba(218, 165, 32, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(218, 165, 32, 0);
+    }
+  }
+
+  .btn-outline-primary,
+  .btn-outline-warning,
+  .btn-outline-danger {
+    border-color: #D4AF37;
+    color: #D4AF37;
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-primary:hover,
+  .btn-outline-warning:hover,
+  .btn-outline-danger:hover {
+    background-color: #D4AF37;
+    color: white;
+  }
+
+  .btn-sm i {
+    font-size: 1rem;
+  }
+
+  .container {
+    padding-top: 80px;
+  }
+
+  .card-body ul li {
+    margin-bottom: 10px;
+  }
+
+  .scrollable-container {
+    max-height: 550px;
+    overflow-y: auto;
+  }
+
+  @media (max-width: 768px) {
+    h2.text-center {
+      font-size: 2rem;
+    }
+
+    .card-body {
+      padding: 20px 15px;
+    }
+
+    .card-body ul li {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+
+<div class="container">
+  <h2 class="text-center display-5 fw-bold mb-5 text-gradient">Consumos Registrados</h2>
+
+    
+  <a href="{% url 'consumos:consumo_create' %}" class="btn btn-success">
+    Registrar nuevo consumo
+  </a>
+  
+  
+  {% if consumos %}
+    <div class="scrollable-container">
+      <div class="row g-4">
+        {% for consumo in consumos %}
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="card border-0 bg-glass hover-scale h-100">
+              <div class="card-body d-flex flex-column justify-content-between">
+                <div>
+                  <h5 class="fw-bold mb-3 text-dark">
+                    <i class="bi bi-box-seam me-2 text-primary"></i>{{ consumo.producto }}
+                  </h5>
+                  <ul class="list-unstyled text-secondary small">
+                    <li><i class="bi bi-person-fill me-1 text-info"></i> <strong>Huésped:</strong> {{ consumo.huesped }}</li>
+                    <li><i class="bi bi-123 me-1 text-warning"></i> <strong>Cantidad:</strong> {{ consumo.cantidad }}</li>
+                    <li><i class="bi bi-calendar2-week me-1 text-success"></i> <strong>Fecha:</strong> {{ consumo.fecha|date:"d M Y" }}</li>
+                  </ul>
+                </div>
+
+                <div class="mt-4 d-flex flex-column gap-2">
+                  <a href="{% url 'consumos:consumo_detail' consumo.pk %}" class="btn btn-outline-primary btn-sm rounded-pill">
+                    <i class="bi bi-eye-fill me-1"></i> Ver detalle
+                  </a>
+                  <a href="{% url 'consumos:consumo_update' consumo.pk %}" class="btn btn-outline-warning btn-sm rounded-pill">
+                    <i class="bi bi-pencil-fill me-1"></i> Editar
+                  </a>
+                  <a href="{% url 'consumos:consumo_delete' consumo.pk %}" class="btn btn-outline-danger btn-sm rounded-pill">
+                    <i class="bi bi-trash-fill me-1"></i> Eliminar
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-secondary text-center mt-5 rounded-4 shadow-sm py-4">
+      Aún no hay consumos registrados. <strong>¡Hora de vender algo!</strong>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+# Archivos y directorios comunes a ignorar en proyectos Python/Django
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv
+venv/
+env/
+.idea/
+.vscode/
+*.sqlite3
+db.sqlite3
+/static/
+/media/
+*.log
+*.pot
+*.pyc
+.DS_Store
