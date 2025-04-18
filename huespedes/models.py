@@ -1,7 +1,9 @@
+from django.utils import timezone
 from django.db import models
 from habitaciones.models import Habitacion
 
 
+## MODELO DE HUESPEDES
 
 class Huesped(models.Model):
     TIPO_DOCUMENTO_CHOICES = [
@@ -26,6 +28,8 @@ class Huesped(models.Model):
     vehiculo = models.CharField(max_length=50, blank=True, null=True)
     placas = models.CharField(max_length=10, blank=True, null=True)
     habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE, related_name='huespedes')
+    fecha_entrada = models.DateField(default=timezone.now)
+    fecha_salida = models.DateField()
 
     def __str__(self):
         return f'{self.nombre} {self.apellido}'

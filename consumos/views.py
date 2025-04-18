@@ -1,12 +1,9 @@
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
 from .forms import ConsumoForm
 from rest_framework import viewsets
-
 from .models import Consumo, Habitacion
-
 # consumos/views.py
 from .serializers import HuespedSerializer
 
@@ -36,7 +33,7 @@ class ConsumoCreateView(CreateView):
 
     def form_valid(self, form):
         # Usamos consistentemente "estado_habitacion" y el valor 'disponible' en minúsculas
-        if not Habitacion.objects.filter(estado='ocupada').exists():
+        if not Habitacion.objects.filter(estado_habitacion='ocupada').exists():
             # Si no hay habitaciones disponibles, redirige al formulario de habitaciones
             return redirect('habitaciones:habitacion_create')
         # Si hay habitaciones disponibles, continuar con el guardado del consumo

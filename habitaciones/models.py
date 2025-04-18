@@ -24,7 +24,7 @@ class Habitacion(models.Model):
         verbose_name="Número de Habitación"
     )
 
-    estado = models.CharField(
+    estado_habitacion = models.CharField(
         max_length=20,
         choices=ESTADO_CHOICES,
         default='disponible',

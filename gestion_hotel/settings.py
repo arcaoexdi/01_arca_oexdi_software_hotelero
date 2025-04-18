@@ -13,23 +13,14 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
-from decouple import Config
+from decouple import config
 
 
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv()
 
-# Usar la variable de entorno para el SECRET_KEY
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
-
-# Cargar variables de entorno desde el archivo .env
-config = Config()
-
-# Utilizar la variable de entorno DJANGO_SECRET_KEY
-
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'ClaveSecreta')
-
-
+# Usar la variable de entorno para el SECRET_KEY, con un valor por defecto si no está definida
+SECRET_KEY = config('DJANGO_SECRET_KEY', default='django-insecure-90#eojb8r#c@q_33dn216#0p+8z^!bq92-&vtt^)osm%e*&u=e')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-90#eojb8r#c@q_33dn216#0p+8z^!bq92-&vtt^)osm%e*&u=e'
+# Ya lo cargamos de la variable de entorno, no es necesario mantenerlo en el código
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -64,10 +55,6 @@ INSTALLED_APPS = [
     'huespedes',
     'consumos',
     'productos'
-    
-    
-    
-
 ]
 
 MIDDLEWARE = [

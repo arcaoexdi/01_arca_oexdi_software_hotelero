@@ -12,7 +12,7 @@ class HabitacionForm(forms.ModelForm):
         widgets = {
             'numero': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 101'}),
             'tipo': forms.Select(attrs={'class': 'form-control'}),
-            'estado': forms.Select(attrs={'class': 'form-control'}),
+            'estado_habitacion': forms.Select(attrs={'class': 'form-control'}),  # Cambié 'estado' por 'estado_habitacion'
             'capacidad': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
             'precio': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
             'imagen': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),

@@ -3,8 +3,6 @@ from .models import Consumo
 from habitaciones.models import Habitacion
 from django.utils.timezone import now
 
-
-# FORM DE CONSUMOS 
 class ConsumoForm(forms.ModelForm):
     class Meta:
         model = Consumo
@@ -24,10 +22,13 @@ class ConsumoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Solo habitaciones disponibles
-        self.fields['habitacion'].queryset = Habitacion.objects.filter(estado='disponible')
+        # Solo habitaciones disponibles y con huéspedes activos
+        self.fields['habitacion'].queryset = Habitacion.objects.filter(
+            estado_habitacion='disponible',
+            huespedes__fecha_salida__gte=now()
+        ).distinct()
 
-        # Etiquetas personalizadas si las necesitas
+        # Etiquetas personalizadas
         self.fields['habitacion'].label = 'Habitación'
         self.fields['huesped'].label = 'Huésped'
         self.fields['producto'].label = 'Producto'
@@ -35,7 +36,7 @@ class ConsumoForm(forms.ModelForm):
         self.fields['observaciones'].label = 'Observaciones'
 
         # Clases para los campos
-        self.fields['habitacion'].queryset = Habitacion.objects.filter(huesped__fecha_salida__gte=now()).distinct()
+        self.fields['habitacion'].widget.attrs.update({'class': 'form-control shadow-sm'})
         self.fields['huesped'].widget.attrs.update({'class': 'form-control shadow-sm'})
         self.fields['producto'].widget.attrs.update({'class': 'form-control shadow-sm'})
 
@@ -43,8 +44,27 @@ class ConsumoForm(forms.ModelForm):
         cleaned_data = super().clean()
         habitacion = cleaned_data.get('habitacion')
         huesped = cleaned_data.get('huesped')
+        producto = cleaned_data.get('producto')
+        cantidad = cleaned_data.get('cantidad')
 
+        # Validación de si el huésped pertenece a la habitación seleccionada
         if habitacion and huesped and huesped.habitacion != habitacion:
             raise forms.ValidationError("Este huésped no pertenece a la habitación seleccionada.")
         
+        # Validación de stock: la cantidad no puede ser mayor al stock disponible
+        if producto and cantidad > producto.disponible:
+            raise forms.ValidationError({'cantidad': "No hay suficiente stock del producto."})
+
         return cleaned_data
+
+    def save(self, commit=True):
+        consumo = super().save(commit=False)
+
+        # Actualización del precio total antes de guardar el consumo
+        consumo.precio_total = consumo.total()
+
+        # Si la instancia se guarda, actualizar el stock del producto
+        if commit:
+            consumo.save()
+
+        return consumo

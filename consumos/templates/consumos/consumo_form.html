@@ -24,7 +24,10 @@
                             {% if habitaciones %}
                                 <select class="form-select" name="habitacion" id="id_habitacion" required>
                                     {% for habitacion in habitaciones %}
-                                        <option value="{{ habitacion.id }}">{{ habitacion.numero }} - {{ habitacion.estado_habitacion }}</option>
+                                        <option value="{{ habitacion.id }}"
+                                            {% if habitacion.id == form.habitacion.value %}selected{% endif %}>
+                                            {{ habitacion.numero }} - {{ habitacion.estado_habitacion }}
+                                        </option>
                                     {% endfor %}
                                 </select>
                             {% else %}
@@ -38,7 +41,6 @@
                                 </div>
                             {% endif %}
                         </div>
-                    
 
                         <!-- Huésped -->
                         <div class="mb-4">
@@ -154,6 +156,7 @@
     {% endif %}
 </div>
 
+<!-- Script para mostrar el precio -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const productoSelect = document.getElementById('id_producto');
@@ -162,4 +165,18 @@
         function updatePrecio() {
             const selectedOption = productoSelect.options[productoSelect.selectedIndex];
             const texto = selectedOption.textContent;
-            const match = texto.match(/([\
+            const match = texto.match(/([\d.,]+)/);
+            if (match) {
+                precioSpan.textContent = `S/. ${match[1]}`;
+            } else {
+                precioSpan.textContent = "S/. 0.00";
+            }
+        }
+
+        if (productoSelect) {
+            productoSelect.addEventListener('change', updatePrecio);
+            updatePrecio();
+        }
+    });
+</script>
+{% endblock %}
