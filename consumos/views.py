@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .forms import ConsumoForm
@@ -56,6 +56,17 @@ class ConsumoCreateView(CreateView):
             form.fields[campo].widget.attrs.update({'class': 'form-control shadow-sm'})
 
         return context
+    
+
+def consumo_detail(request, consumo_id):
+    consumo = get_object_or_404(Consumo, id=consumo_id)
+    habitaciones = Habitacion.objects.all()
+    context = {
+        'consumo': consumo,
+        'habitaciones': habitaciones,
+    }
+    return render(request, 'consumo/detalle.html', context)
+
 
 
 

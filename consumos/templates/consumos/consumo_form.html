@@ -19,12 +19,10 @@
                         {% csrf_token %}
 
                         <!-- Habitaciones -->
-                        <div class="mb-4 d-flex align-items-center">
-                            <label for="{{ form.habitacion.id_for_label }}" class="form-label">Habitación</label>
-                            {{ form.habitacion|add_class:"form-select ms-3" }}
-                            <a href="{% url 'habitaciones:habitacion_create' %}" class="btn btn-outline-primary ms-3">
-                                <i class="bi bi-plus-circle me-2"></i> Agregar
-                            </a>
+                        <h4 class="fw-bold text-primary mb-4">Todas las Habitaciones</h4>
+                        <div class="mb-4">
+                            <label for="{{ form.habitacion.id_for_label }}" class="form-label">Selecciona una habitación</label>
+                            {{ form.habitacion|add_class:"form-select" }}
                             {% if form.habitacion.errors %}
                                 <div class="invalid-feedback d-block">
                                     {% for error in form.habitacion.errors %}
@@ -34,7 +32,39 @@
                             {% endif %}
                         </div>
 
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-4">
+                            {% for habitacion in habitaciones %}
+                            <div class="col">
+                                <div class="card h-100 border-0 shadow-lg rounded-4 px-3 py-3 bg-body bg-opacity-75 glass-effect animate__animated animate__fadeInUp habitacion-card"
+                                     data-id="{{ habitacion.id }}">
+                                    <div class="card-body d-flex flex-column justify-content-between">
+                                        <div>
+                                            <img src="{% if habitacion.imagen %}{{ habitacion.imagen.url }}{% else %}{% static 'images/no-image.png' %}{% endif %}"
+                                                alt="Imagen de la habitación"
+                                                class="img-fluid mb-3 rounded-3 card-img-top"
+                                                style="max-height: 150px; object-fit: cover;">
 
+                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                <div>
+                                                    <h5 class="fw-bold text-primary-emphasis mb-0">Habitación #{{ habitacion.numero }}</h5>
+                                                    <span class="badge bg-info-subtle text-info-emphasis text-uppercase small">{{ habitacion.get_tipo_display }}</span>
+                                                </div>
+                                                <div>
+                                                    <span class="badge 
+                                                        {% if habitacion.get_estado_habitacion_display == 'Ocupada' %}bg-danger-subtle text-danger-emphasis
+                                                        {% elif habitacion.get_estado_habitacion_display == 'Disponible' %}bg-success-subtle text-success-emphasis
+                                                        {% else %}bg-warning-subtle text-warning-emphasis
+                                                        {% endif %}">
+                                                        {{ habitacion.get_estado_habitacion_display }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
 
                         <!-- Huésped -->
                         <div class="mb-4">
@@ -158,12 +188,15 @@
     {% endif %}
 </div>
 
-<!-- Script para mostrar el precio -->
+<!-- Script para mostrar el precio y resaltar habitación seleccionada -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const productoSelect = document.getElementById('id_producto');
         const precioSpan = document.getElementById('precioProducto');
+        const habitacionSelect = document.getElementById('id_habitacion');
+        const tarjetas = document.querySelectorAll('.habitacion-card');
 
+        // Actualiza el precio del producto
         function updatePrecio() {
             const selectedOption = productoSelect.options[productoSelect.selectedIndex];
             const texto = selectedOption.textContent;
@@ -175,9 +208,36 @@
             }
         }
 
+        // Resalta la tarjeta seleccionada
+        function resaltarHabitacionSeleccionada() {
+            const idSeleccionado = habitacionSelect.value;
+
+            tarjetas.forEach(tarjeta => {
+                tarjeta.classList.remove('habitacion-seleccionada');
+                if (tarjeta.dataset.id === idSeleccionado) {
+                    tarjeta.classList.add('habitacion-seleccionada');
+                }
+            });
+        }
+
+        // Actualiza la habitación seleccionada al hacer clic en una tarjeta
+        tarjetas.forEach(tarjeta => {
+            tarjeta.addEventListener('click', () => {
+                const habitacionId = tarjeta.dataset.id;
+                habitacionSelect.value = habitacionId; // Actualiza el select
+                habitacionSelect.dispatchEvent(new Event('change')); // Dispara el evento change para aplicar cambios
+            });
+        });
+
+        // Eventos
         if (productoSelect) {
             productoSelect.addEventListener('change', updatePrecio);
             updatePrecio();
+        }
+
+        if (habitacionSelect) {
+            habitacionSelect.addEventListener('change', resaltarHabitacionSeleccionada);
+            resaltarHabitacionSeleccionada(); // Para cuando ya hay habitación seleccionada al cargar
         }
     });
 </script>
