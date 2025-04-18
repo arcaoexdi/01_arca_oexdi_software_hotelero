@@ -12,15 +12,16 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
-import os
 from decouple import config
+import os
 
 
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv()
 
 # Usar la variable de entorno para el SECRET_KEY, con un valor por defecto si no está definida
-SECRET_KEY = config('DJANGO_SECRET_KEY', default='django-insecure-90#eojb8r#c@q_33dn216#0p+8z^!bq92-&vtt^)osm%e*&u=e')
+SECRET_KEY = config("DJANGO_SECRET_KEY")
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
