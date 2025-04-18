@@ -22,10 +22,11 @@ class ConsumoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Solo habitaciones disponibles y con huéspedes activos
+        # Filtrar habitaciones disponibles con huéspedes activos
         self.fields['habitacion'].queryset = Habitacion.objects.filter(
-            estado_habitacion='disponible',
-            huespedes__fecha_salida__gte=now()
+            estado_habitacion='disponible'
+        ).exclude(
+            huespedes__fecha_salida__lt=now()  # Excluye las habitaciones cuyo huésped tenga fecha de salida pasada
         ).distinct()
 
         # Etiquetas personalizadas
@@ -48,10 +49,11 @@ class ConsumoForm(forms.ModelForm):
         cantidad = cleaned_data.get('cantidad')
 
         # Validación de si el huésped pertenece a la habitación seleccionada
-        if habitacion and huesped and huesped.habitacion != habitacion:
-            raise forms.ValidationError("Este huésped no pertenece a la habitación seleccionada.")
+        if habitacion and huesped:
+            if huesped.habitacion != habitacion:
+                raise forms.ValidationError("Este huésped no pertenece a la habitación seleccionada.")
         
-        # Validación de stock: la cantidad no puede ser mayor al stock disponible
+        # Validación de stock
         if producto and cantidad > producto.disponible:
             raise forms.ValidationError({'cantidad': "No hay suficiente stock del producto."})
 
@@ -61,10 +63,14 @@ class ConsumoForm(forms.ModelForm):
         consumo = super().save(commit=False)
 
         # Actualización del precio total antes de guardar el consumo
-        consumo.precio_total = consumo.total()
+        consumo.precio_total = consumo.total()  # Asegúrate de tener un método `total` en el modelo Consumo que calcule el precio total
 
-        # Si la instancia se guarda, actualizar el stock del producto
         if commit:
             consumo.save()
+
+            # Actualización del stock del producto
+            if consumo.producto:
+                consumo.producto.disponible -= consumo.cantidad
+                consumo.producto.save()
 
         return consumo

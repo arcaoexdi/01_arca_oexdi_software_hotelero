@@ -8,6 +8,10 @@ from .models import Consumo, Habitacion
 from .serializers import HuespedSerializer
 
 
+
+# VISTAS DE CONSUMOS
+
+
 class ConsumoViewSet(viewsets.ModelViewSet):
     queryset = Consumo.objects.all()
     serializer_class = HuespedSerializer
@@ -25,6 +29,7 @@ class ConsumoDetailView(DetailView):
     context_object_name = 'consumos'
 
 
+
 class ConsumoCreateView(CreateView):
     model = Consumo
     form_class = ConsumoForm
@@ -32,30 +37,27 @@ class ConsumoCreateView(CreateView):
     success_url = reverse_lazy('consumos:consumo_list')
 
     def form_valid(self, form):
-        # Usamos consistentemente "estado_habitacion" y el valor 'disponible' en minúsculas
-        if not Habitacion.objects.filter(estado_habitacion='ocupada').exists():
-            # Si no hay habitaciones disponibles, redirige al formulario de habitaciones
+        # Si no hay ninguna habitación en la base de datos, redirigir a crear una
+        if not Habitacion.objects.exists():
             return redirect('habitaciones:habitacion_create')
-        # Si hay habitaciones disponibles, continuar con el guardado del consumo
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
-        # Obtener habitaciones disponibles
-        context['habitaciones'] = Habitacion.objects.filter(estado_habitacion='Disponible')
 
-        # Si no hay habitaciones disponibles, agregar una variable al contexto para mostrar el mensaje
-        context['no_habitaciones'] = not Habitacion.objects.filter(estado_habitacion='Disponible').exists()
+        # Todas las habitaciones existentes, sin importar el estado
+        habitaciones_existentes = Habitacion.objects.all()
+        context['habitaciones'] = habitaciones_existentes
+        context['no_habitaciones'] = not habitaciones_existentes.exists()
 
-        # Accede al formulario y agrega clases personalizadas a los campos
+        # Estética y estilo de formulario
         form = context['form']
-        form.fields['huesped'].widget.attrs.update({'class': 'form-control shadow-sm'})
-        form.fields['producto'].widget.attrs.update({'class': 'form-control shadow-sm'})
-        form.fields['cantidad'].widget.attrs.update({'class': 'form-control shadow-sm'})
-        form.fields['observaciones'].widget.attrs.update({'class': 'form-control shadow-sm'})
+        for campo in ['habitacion', 'huesped', 'producto', 'cantidad', 'observaciones']:
+            form.fields[campo].widget.attrs.update({'class': 'form-control shadow-sm'})
 
         return context
+
+
 
 
 

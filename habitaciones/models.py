@@ -60,7 +60,9 @@ class Habitacion(models.Model):
         verbose_name_plural = "Habitaciones"
 
     def __str__(self):
-        return f"Habitación {self.numero} - {self.get_tipo_display()} ({self.get_estado_display()})"
+        return f"Habitación {self.numero} - {self.get_tipo_display()} ({self.get_estado_habitacion_display()})"
+
+
 
     def obtener_huespedes(self):
         Huesped = apps.get_model('huespedes', 'Huesped')
@@ -71,22 +73,24 @@ class Habitacion(models.Model):
         return len(self.obtener_huespedes())
 
     def esta_disponible(self):
-        if self.estado == 'disponible' and self.capacidad_actual < self.capacidad:
+        if self.estado_habitacion == 'disponible' and self.capacidad_actual < self.capacidad:
             return True
         else:
             if self.capacidad_actual >= self.capacidad:
-                self.estado = 'ocupada'
+                self.estado_habitacion = 'ocupada'
                 self.save()
             return False
+
 
     def esta_llena(self):
         return self.capacidad_actual >= self.capacidad
 
     def actualizar_estado(self):
         if self.capacidad_actual >= self.capacidad:
-            self.estado = 'ocupada'
+            self.estado_habitacion = 'ocupada'
         elif self.capacidad_actual == 0:
-            self.estado = 'disponible'
+            self.estado_habitacion = 'disponible'
         else:
-            self.estado = 'disponible'  # Podrías añadir "parcialmente ocupada" si algún día lo necesitás
+            self.estado_habitacion = 'disponible'
         self.save()
+
