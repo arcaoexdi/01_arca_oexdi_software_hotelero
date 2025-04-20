@@ -1,117 +1,124 @@
 {% extends 'base_generic.html' %}
 {% load static %}
-{% load widget_tweaks %}
-
-<style>
-    .habitacion-card {
-        position: relative;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-    }
-    .habitacion-card:hover {
-        transform: scale(1.02);
-    }
-    .habitacion-card .check-icon {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        font-size: 1.8rem;
-        color: #28a745;
-        display: none;
-        z-index: 2;
-    }
-    .habitacion-card.habitacion-seleccionada {
-        border: 3px solid #28a745 !important;
-        box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
-    }
-    .habitacion-card.habitacion-seleccionada .check-icon {
-        display: block;
-    }
-</style>
 
 {% block content %}
 <div class="container py-5">
-    <div class="text-center mb-5">
-        <h2 class="display-5 fw-bold text-gradient">
-            {{ form.instance.pk|yesno:"Editar Consumo,Nuevo Consumo" }}
-        </h2>
-        <p class="text fs-5">Registrar nuevo consumo cargado a habitación y huésped</p>
-    </div>
+  
+  <h2 class="fw-bold mb-5 pt-5 text-white text-center display-5 border-bottom border-3 border-light pb-3 animate__animated animate__fadeInDown">
+    Gestión de Habitaciones
+  </h2>
 
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10 col-sm-12">
-            <div class="card shadow-lg border-0 rounded-4 bg-light bg-opacity-75">
-                <div class="card-body px-4 py-5">
-                    <form method="post" class="needs-validation" novalidate>
-                        {% csrf_token %}
+  <div class="d-flex justify-content-end mb-4 animate__animated animate__fadeInRight">
+    <a href="{% url 'habitaciones:habitacion_create' %}" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+      Nueva habitación
+    </a>
+  </div>
 
-                        <!-- Formulario Habitaciones -->
-                        <h4 class="fw-bold text-primary mb-4">Selecciona una Habitación</h4>
-                        <div class="mb-4">
-                            <label for="{{ form.habitacion.id_for_label }}" class="form-label">Habitación</label>
-                            <select name="habitacion" id="{{ form.habitacion.id_for_label }}" class="form-select" aria-describedby="{{ form.habitacion.id_for_label }}">
-                                <option value="" disabled selected>Seleccione una habitación</option>
-                                {% for habitacion in habitaciones %}
-                                    <option value="{{ habitacion.id }}" data-numero="{{ habitacion.numero }}" data-tipo="{{ habitacion.get_tipo_display }}" data-estado="{{ habitacion.get_estado_habitacion_display }}">
-                                        Habitación #{{ habitacion.numero }} - {{ habitacion.get_tipo_display }} - {{ habitacion.get_estado_habitacion_display }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                            {% if form.habitacion.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {% for error in form.habitacion.errors %}
-                                        <p>{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
+  <!-- Formulario para seleccionar habitación -->
+  <div class="mb-4">
+    <label for="{{ form.habitacion.id_for_label }}" class="form-label">Selecciona una habitación</label>
+    {{ form.habitacion|add_class:"form-select" }}
+    {% if form.habitacion.errors %}
+      <div class="invalid-feedback d-block">
+        {% for error in form.habitacion.errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
 
-                        <!-- Resto del formulario (Producto, Cantidad, Observaciones) -->
+  <!-- Mostrar las habitaciones disponibles en el select -->
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {% for habitacion in habitaciones %}
+    <div class="col">
+      <div class="card h-100 border-0 shadow-lg rounded-4 px-3 py-3 bg-body bg-opacity-75 glass-effect animate__animated animate__fadeInUp">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <div>
+            <img src="{% if habitacion.imagen %}{{ habitacion.imagen.url }}{% else %}{% static 'images/no-image.png' %}{% endif %}"
+              alt="Imagen de la habitación"
+              class="img-fluid mb-3 rounded-3 card-img-top"
+              style="max-height: 150px; object-fit: cover;">
 
-                        <div class="mb-4">
-                            <label for="{{ form.huesped.id_for_label }}" class="form-label">Huésped</label>
-                            {{ form.huesped|add_class:"form-select" }}
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="{{ form.producto.id_for_label }}" class="form-label">Producto</label>
-                            {{ form.producto|add_class:"form-select" }}
-                        </div>
-
-                        <div class="mb-4 text-center">
-                            <p class="fw-bold mb-1">Precio del producto seleccionado:</p>
-                            <p id="precioProducto" class="h4 text-success">S/. 0.00</p>
-                        </div>
-
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">
-                                <i class="bi bi-save me-1"></i> Guardar
-                            </button>
-                            <a href="{% url 'consumos:consumo_list' %}" class="btn btn-outline-secondary btn-lg px-5 rounded-pill ms-2">
-                                <i class="bi bi-arrow-return-left me-1"></i> Cancelar
-                            </a>
-                        </div>
-                    </form>
-                </div>
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <div>
+                <h5 class="fw-bold text-primary-emphasis mb-0">Habitación #{{ habitacion.numero }}</h5>
+                <span class="badge bg-info-subtle text-info-emphasis text-uppercase small">{{ habitacion.get_tipo_display }}</span>
+              </div>
+              <div>
+                <span class="badge 
+                  {% if habitacion.get_estado_habitacion_display == 'Ocupada' %}bg-danger-subtle text-danger-emphasis
+                  {% elif habitacion.get_estado_habitacion_display == 'Disponible' %}bg-success-subtle text-success-emphasis
+                  {% else %}bg-warning-subtle text-warning-emphasis
+                  {% endif %}">
+                  {{ habitacion.get_estado_habitacion_display }}
+                </span>
+              </div>
             </div>
+
+            <ul class="list-unstyled small mb-3 text-body-secondary">
+              <li><strong>Capacidad:</strong> {{ habitacion.capacidad }} personas</li>
+              <li><strong>Precio:</strong> ${{ habitacion.precio }}</li>
+            </ul>
+
+            {% if habitacion.huespedes.all %}
+            <div class="mb-2">
+              <strong class="d-block mb-1">Huéspedes:</strong>
+              <ul class="list-unstyled small ms-2 mb-0 text-body-secondary">
+                {% for huesped in habitacion.huespedes.all %}
+                <li>• {{ huesped.nombre }} {{ huesped.apellido }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% else %}
+            <p class="text-muted small fst-italic mb-2">Sin huéspedes registrados</p>
+            {% endif %}
+          </div>
+
+          <div class="mt-3 pt-3 border-top d-flex flex-column gap-2">
+            <button class="btn btn-outline-success btn-sm rounded-pill" onclick="toggleCheckIn({{ habitacion.id }})">
+              Check-in
+            </button>
+            <button class="btn btn-outline-danger btn-sm rounded-pill" onclick="toggleCheckOut({{ habitacion.id }})">
+              Check-out
+            </button>
+
+            <a href="{% url 'habitaciones:huesped_create' habitacion.id %}" 
+               class="btn btn-success btn-sm rounded-pill" 
+               id="btn-checkin-{{ habitacion.id }}" 
+               style="display: none;">
+              Agregar huésped
+            </a>
+
+            <a href="{% url 'habitaciones:habitacion_update' habitacion.id %}" 
+               class="btn btn-warning btn-sm rounded-pill">
+              Editar habitación
+            </a>
+          </div>
         </div>
+      </div>
     </div>
+    {% endfor %}
 
-    <!-- Script para mostrar el precio y resaltar habitación seleccionada -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const habitacionSelect = document.getElementById('{{ form.habitacion.id_for_label }}');
+    <!-- Tarjeta de creación -->
+    <div class="col">
+      <a href="{% url 'habitaciones:habitacion_create' %}" class="text-decoration-none h-100 d-block animate__animated animate__zoomIn">
+        <div class="card h-100 border-0 shadow rounded-4 d-flex align-items-center justify-content-center bg-body-secondary bg-opacity-50">
+          <h1 class="display-4 text-muted">+</h1>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
 
-            // Este script manejará la selección de habitación y podrá mostrar más detalles si es necesario.
-            habitacionSelect.addEventListener('change', function () {
-                const selectedOption = habitacionSelect.options[habitacionSelect.selectedIndex];
-                // Aquí puedes manejar lo que quieras hacer cuando cambias la selección, por ejemplo:
-                console.log("Habitación seleccionada: ", selectedOption.textContent);
-                // Puedes agregar lógicas adicionales si deseas mostrar detalles de la habitación, etc.
-            });
-        });
-    </script>
+<script>
+  function toggleCheckIn(id) {
+    const btn = document.getElementById(`btn-checkin-${id}`);
+    if (btn) btn.style.display = 'inline-block';
+  }
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></script>
+  function toggleCheckOut(id) {
+    const btn = document.getElementById(`btn-checkin-${id}`);
+    if (btn) btn.style.display = 'none';
+  }
+</script>
 {% endblock %}
