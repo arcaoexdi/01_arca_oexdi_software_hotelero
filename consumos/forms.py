@@ -2,6 +2,7 @@ from django import forms
 from .models import Consumo
 from habitaciones.models import Habitacion
 from django.utils.timezone import now
+from django.db import transaction  # Usamos transacciones para asegurar la coherencia de los datos
 
 class ConsumoForm(forms.ModelForm):
     class Meta:
@@ -28,10 +29,9 @@ class ConsumoForm(forms.ModelForm):
         ).exclude(
             huespedes__fecha_salida__lt=now()  # Excluye las habitaciones cuyo huésped tenga fecha de salida pasada
         ).distinct()
-        
-         # ✅ Mostrar como "Habitación #101", etc.
-        self.fields['habitacion'].label_from_instance = lambda obj: f'Habitación #{obj.numero}'
 
+        # Mostrar como "Habitación #101", etc.
+        self.fields['habitacion'].label_from_instance = lambda obj: f'Habitación #{obj.numero}'
 
         # Etiquetas personalizadas
         self.fields['habitacion'].label = 'Habitación'
@@ -57,24 +57,34 @@ class ConsumoForm(forms.ModelForm):
             if huesped.habitacion != habitacion:
                 raise forms.ValidationError("Este huésped no pertenece a la habitación seleccionada.")
         
+        # Verificación si el producto no está asociado o es None
+        if producto is None:
+            raise forms.ValidationError("El producto no ha sido seleccionado.")
+        
         # Validación de stock
-        if producto and cantidad > producto.disponible:
-            raise forms.ValidationError({'cantidad': "No hay suficiente stock del producto."})
+        if cantidad is not None and producto.disponible is not None:
+            if cantidad > producto.disponible:
+                raise forms.ValidationError({'cantidad': "No hay suficiente stock del producto."})
+        else:
+            # En caso de que el stock no esté disponible
+            raise forms.ValidationError({'producto': "Producto o stock no disponible."})
 
         return cleaned_data
 
     def save(self, commit=True):
-        consumo = super().save(commit=False)
+        # Usamos una transacción para garantizar que todo se guarde de forma coherente
+        with transaction.atomic():
+            consumo = super().save(commit=False)
 
-        # Actualización del precio total antes de guardar el consumo
-        consumo.precio_total = consumo.total()  # Asegúrate de tener un método `total` en el modelo Consumo que calcule el precio total
+            # Actualización del precio total antes de guardar el consumo
+            consumo.precio_total = consumo.total()  # Asegúrate de tener un método `total` en el modelo Consumo que calcule el precio total
 
-        if commit:
-            consumo.save()
+            if commit:
+                consumo.save()
 
-            # Actualización del stock del producto
-            if consumo.producto:
-                consumo.producto.disponible -= consumo.cantidad
-                consumo.producto.save()
+                # Actualización del stock del producto
+                if consumo.producto:
+                    consumo.producto.disponible -= consumo.cantidad
+                    consumo.producto.save()
 
-        return consumo
+            return consumo

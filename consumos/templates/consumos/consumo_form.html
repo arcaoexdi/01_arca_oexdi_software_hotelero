@@ -2,15 +2,18 @@
 {% load static %}
 {% load widget_tweaks %}
 
+{% block extra_css %}
 <style>
     .habitacion-card {
         position: relative;
         cursor: pointer;
         transition: transform 0.2s ease;
     }
+
     .habitacion-card:hover {
         transform: scale(1.02);
     }
+
     .habitacion-card .check-icon {
         position: absolute;
         top: 12px;
@@ -20,14 +23,23 @@
         display: none;
         z-index: 2;
     }
+
     .habitacion-card.habitacion-seleccionada {
         border: 3px solid #28a745 !important;
         box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
     }
+
     .habitacion-card.habitacion-seleccionada .check-icon {
         display: block;
     }
+
+    .text-gradient {
+        background: linear-gradient(to right, #0f9d58, #34a853);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 </style>
+{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -35,86 +47,101 @@
         <h2 class="display-5 fw-bold text-gradient">
             {{ form.instance.pk|yesno:"Editar Consumo,Nuevo Consumo" }}
         </h2>
-        <p class="text fs-5">Registrar nuevo consumo cargado a habitación y huésped</p>
+        <p class="fs-5 text-muted">Registra un consumo vinculado a habitación y huésped</p>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-lg-8 col-md-10 col-sm-12">
-            <div class="card shadow-lg border-0 rounded-4 bg-light bg-opacity-75">
+            <div class="card shadow border-0 rounded-4 bg-white bg-opacity-75">
                 <div class="card-body px-4 py-5">
                     <form method="post" class="needs-validation" novalidate>
                         {% csrf_token %}
 
-                        <!-- Formulario Habitaciones -->
-                        <h4 class="fw-bold text-primary mb-4">Selecciona una Habitación</h4>
+                        <!-- Habitación -->
                         <div class="mb-4">
-                            <label for="{{ form.habitacion.id_for_label }}" class="form-label">Selecciona una habitación</label>
-                            <div class="form-select-wrapper">
-                                <select id="id_habitacion" name="habitacion" class="form-select">
-                                    <option value="" disabled selected>Selecciona una habitación</option>
-                                    {% for habitacion in habitaciones %}
-                                    <option value="{{ habitacion.id }}">
+                            <label for="{{ form.habitacion.id_for_label }}" class="form-label fw-bold">Habitación</label>
+                            <select id="id_habitacion" name="habitacion" class="form-select" required>
+                                <option value="" disabled selected>Selecciona una habitación</option>
+                                {% for habitacion in habitaciones %}
+                                    <option value="{{ habitacion.id }}" {% if form.habitacion.value == habitacion.id|stringformat:"s" %}selected{% endif %}>
                                         Habitación #{{ habitacion.numero }} - {{ habitacion.get_estado_habitacion_display }}
                                     </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
+                                {% endfor %}
+                            </select>
                             {% if form.habitacion.errors %}
                                 <div class="invalid-feedback d-block">
                                     {% for error in form.habitacion.errors %}
-                                        <p>{{ error }}</p>
+                                        <small class="text-danger">{{ error }}</small>
                                     {% endfor %}
                                 </div>
                             {% endif %}
                         </div>
 
-                        <!-- Formulario Huésped -->
+                        <!-- Huésped -->
                         <div class="mb-4">
-                            <label for="{{ form.huesped.id_for_label }}" class="form-label">Selecciona el huésped</label>
+                            <label for="{{ form.huesped.id_for_label }}" class="form-label fw-bold">Huésped</label>
                             {{ form.huesped|add_class:"form-select" }}
                         </div>
 
-                        <!-- Formulario Producto -->
+                        <!-- Producto -->
                         <div class="mb-4">
-                            <label for="{{ form.producto.id_for_label }}" class="form-label">Selecciona el Producto</label>
+                            <label for="{{ form.producto.id_for_label }}" class="form-label fw-bold">Producto</label>
                             {{ form.producto|add_class:"form-select" }}
                         </div>
 
                         <!-- Precio Producto -->
                         <div class="mb-4 text-center">
-                            <p class="fw-bold mb-1">Precio del producto seleccionado:</p>
-                            <p id="precioProducto" class="h4 text-success">S/. 0.00</p>
+                            <p class="fw-bold mb-1">Precio actual:</p>
+                            <p id="precioProducto" class="h4 text-success">
+                                {% if form.producto.value %}
+                                    S/. {{ form.producto.selected_option.dataset.precio }}
+                                {% else %}
+                                    S/. 0.00
+                                {% endif %}
+                            </p>
                         </div>
 
-                        <!-- Botones de acción -->
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">
-                                <i class="bi bi-save me-1"></i> Guardar
-                            </button>
-                            <a href="{% url 'consumos:consumo_list' %}" class="btn btn-outline-secondary btn-lg px-5 rounded-pill ms-2">
-                                <i class="bi bi-arrow-return-left me-1"></i> Cancelar
-                            </a>
+                        <!-- Cantidad -->
+                        <div class="mb-4">
+                            <label for="{{ form.cantidad.id_for_label }}" class="form-label fw-bold">Cantidad</label>
+                            {{ form.cantidad|add_class:"form-control" }}
                         </div>
+
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+
+                            <!-- Botón Guardar -->
+                            <button type="submit" class="btn btn-success btn-lg px-5 py-2 rounded-pill shadow transition-all d-flex align-items-center">
+                                <i class="bi bi-check-circle me-2 fs-5"></i>
+                                <span>Guardar</span>
+                            </button>
+
+                            <!-- Botón Cancelar -->
+                            <a href="{% url 'consumos:consumo_list' %}" class="btn btn-outline-secondary btn-lg px-5 py-2 rounded-pill shadow-sm border-2 transition-all d-flex align-items-center">
+                                <i class="bi bi-x-circle me-2 fs-5"></i>
+                                <span>Cancelar</span>
+                            </a>
+
+                        </div>
+
                     </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
+{% endblock %}
 
-    <!-- Script para mostrar el precio dinámicamente -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const productoSelect = document.getElementById('id_producto');
-            const precioProducto = document.getElementById('precioProducto');
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const productoSelect = document.getElementById('id_producto');
+        const precioProducto = document.getElementById('precioProducto');
 
-            // Cambia el precio según el producto seleccionado
-            productoSelect.addEventListener('change', function () {
-                const precio = this.options[this.selectedIndex].dataset.precio;
-                precioProducto.textContent = `S/. ${precio}`;
-            });
+        productoSelect?.addEventListener('change', function () {
+            const precio = this.options[this.selectedIndex].dataset.precio || '0.00';
+            precioProducto.textContent = `S/. ${precio}`;
         });
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></script>
+    });
+</script>
 {% endblock %}

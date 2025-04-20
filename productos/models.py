@@ -1,5 +1,17 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from huespedes.models import Huesped  # importa si aún no está
+
+
+class Consumo(models.Model):
+    ...
+    huesped = models.ForeignKey(
+        Huesped,
+        on_delete=models.CASCADE,
+        related_name='consumos_productos',  # este nombre debe ser único
+        verbose_name="Huésped"
+    )
+
 
 class Categoria(models.Model):
     """

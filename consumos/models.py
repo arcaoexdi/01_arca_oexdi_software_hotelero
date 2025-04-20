@@ -20,52 +20,15 @@ class Consumo(models.Model):
     """
     Modelo para representar el consumo de productos en una habitación por un huésped.
     """
-    habitacion = models.ForeignKey(
-        Habitacion, 
-        on_delete=models.CASCADE, 
-        related_name='consumos', 
-        verbose_name="Habitación"
-    )
-
-    huesped = models.ForeignKey(
-        Huesped, 
-        on_delete=models.SET_NULL, 
-        null=True, 
-        blank=True, 
-        related_name='consumos', 
-        verbose_name="Huésped (opcional)"
-    )
-
-    producto = models.ForeignKey(
-        Producto, 
-        on_delete=models.CASCADE, 
-        verbose_name="Producto"
-    )
-
-    cantidad = models.PositiveIntegerField(
-        default=1,
-        validators=[MinValueValidator(1)], 
-        verbose_name="Cantidad"
-    )
-
-    fecha_consumo = models.DateTimeField(
-        auto_now_add=True, 
-        verbose_name="Fecha del Consumo"
-    )
-
-    observaciones = models.TextField(
-        blank=True, 
-        null=True, 
-        verbose_name="Observaciones"
-    )
-
+    habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE, related_name='consumos', verbose_name="Habitación")
+    huesped = models.ForeignKey(Huesped, on_delete=models.CASCADE, null=True, blank=True, related_name='consumos', verbose_name="Huésped (opcional)")
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, verbose_name="Producto")
+    cantidad = models.PositiveIntegerField(default=1,validators=[MinValueValidator(1)], verbose_name="Cantidad")
+    fecha_consumo = models.DateTimeField(auto_now_add=True, verbose_name="Fecha del Consumo")
+    observaciones = models.TextField(blank=True, null=True, verbose_name="Observaciones")
+    
     # Campo calculado para el total del consumo, opcional
-    precio_total = models.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        default=0.00,
-        verbose_name="Total del Consumo"
-    )
+    precio_total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name="Total del Consumo")
 
     class Meta:
         verbose_name = "Consumo"
