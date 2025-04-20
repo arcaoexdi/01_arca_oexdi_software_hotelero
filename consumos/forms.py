@@ -28,6 +28,10 @@ class ConsumoForm(forms.ModelForm):
         ).exclude(
             huespedes__fecha_salida__lt=now()  # Excluye las habitaciones cuyo huésped tenga fecha de salida pasada
         ).distinct()
+        
+         # ✅ Mostrar como "Habitación #101", etc.
+        self.fields['habitacion'].label_from_instance = lambda obj: f'Habitación #{obj.numero}'
+
 
         # Etiquetas personalizadas
         self.fields['habitacion'].label = 'Habitación'
