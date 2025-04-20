@@ -46,10 +46,19 @@
                         {% csrf_token %}
 
                         <!-- Formulario Habitaciones -->
-                        <h4 class="fw-bold text-primary mb-4">Todas las Habitaciones</h4>
+                        <h4 class="fw-bold text-primary mb-4">Selecciona una Habitación</h4>
                         <div class="mb-4">
                             <label for="{{ form.habitacion.id_for_label }}" class="form-label">Selecciona una habitación</label>
-                            {{ form.habitacion|add_class:"form-select d-none" }}
+                            <div class="form-select-wrapper">
+                                <select id="id_habitacion" name="habitacion" class="form-select">
+                                    <option value="" disabled selected>Selecciona una habitación</option>
+                                    {% for habitacion in habitaciones %}
+                                    <option value="{{ habitacion.id }}">
+                                        Habitación #{{ habitacion.numero }} - {{ habitacion.get_estado_habitacion_display }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                             {% if form.habitacion.errors %}
                                 <div class="invalid-feedback d-block">
                                     {% for error in form.habitacion.errors %}
@@ -59,58 +68,25 @@
                             {% endif %}
                         </div>
 
-                        <!-- Cards de Habitaciones -->
-                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-4">
-                            {% for habitacion in habitaciones %}
-                            <div class="col">
-                                <div class="card h-100 border-0 shadow-lg rounded-4 px-3 py-3 bg-body bg-opacity-75 glass-effect animate__animated animate__fadeInUp habitacion-card"
-                                    data-id="{{ habitacion.id }}" data-numero="{{ habitacion.numero }}">
-                                    <i class="bi bi-check-circle-fill check-icon"></i>
-                                    <div class="card-body d-flex flex-column justify-content-between">
-                                        <div>
-                                            <img src="{% if habitacion.imagen %}{{ habitacion.imagen.url }}{% else %}{% static 'images/no-image.png' %}{% endif %}"
-                                                alt="Imagen de la habitación"
-                                                class="img-fluid mb-3 rounded-3 card-img-top"
-                                                style="max-height: 150px; object-fit: cover;">
-                                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                                <div>
-                                                    <h5 class="fw-bold text-primary-emphasis mb-0">Habitación #{{ habitacion.numero }}</h5>
-                                                    <span class="badge bg-info-subtle text-info-emphasis text-uppercase small">{{ habitacion.get_tipo_display }}</span>
-                                                </div>
-                                                <div>
-                                                    <span class="badge 
-                                                        {% if habitacion.get_estado_habitacion_display == 'Ocupada' %}bg-danger-subtle text-danger-emphasis
-                                                        {% elif habitacion.get_estado_habitacion_display == 'Disponible' %}bg-success-subtle text-success-emphasis
-                                                        {% else %}bg-warning-subtle text-warning-emphasis
-                                                        {% endif %}">
-                                                        {{ habitacion.get_estado_habitacion_display }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-
-                        <!-- Resto del formulario (Producto, Cantidad, Observaciones) -->
-
+                        <!-- Formulario Huésped -->
                         <div class="mb-4">
-                            <label for="{{ form.huesped.id_for_label }}" class="form-label">Huésped</label>
+                            <label for="{{ form.huesped.id_for_label }}" class="form-label">Selecciona el huésped</label>
                             {{ form.huesped|add_class:"form-select" }}
                         </div>
 
+                        <!-- Formulario Producto -->
                         <div class="mb-4">
-                            <label for="{{ form.producto.id_for_label }}" class="form-label">Producto</label>
+                            <label for="{{ form.producto.id_for_label }}" class="form-label">Selecciona el Producto</label>
                             {{ form.producto|add_class:"form-select" }}
                         </div>
 
+                        <!-- Precio Producto -->
                         <div class="mb-4 text-center">
                             <p class="fw-bold mb-1">Precio del producto seleccionado:</p>
                             <p id="precioProducto" class="h4 text-success">S/. 0.00</p>
                         </div>
 
+                        <!-- Botones de acción -->
                         <div class="text-center">
                             <button type="submit" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">
                                 <i class="bi bi-save me-1"></i> Guardar
@@ -125,26 +101,20 @@
         </div>
     </div>
 
-    <!-- Script para mostrar el precio y resaltar habitación seleccionada -->
+    <!-- Script para mostrar el precio dinámicamente -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const habitacionSelect = document.getElementById('id_habitacion');
-            const tarjetas = document.querySelectorAll('.habitacion-card');
-        
-            // Maneja el clic en cada tarjeta
-            tarjetas.forEach(tarjeta => {
-                tarjeta.addEventListener('click', function () {
-                    const habitacionId = this.dataset.id;
-                    // Actualiza el valor del campo oculto del formulario con el ID de la habitación
-                    habitacionSelect.value = habitacionId;
+            const productoSelect = document.getElementById('id_producto');
+            const precioProducto = document.getElementById('precioProducto');
 
-                    // Resalta la tarjeta seleccionada
-                    tarjetas.forEach(t => t.classList.remove('habitacion-seleccionada')); // Elimina selección de todas
-                    this.classList.add('habitacion-seleccionada'); // Marca esta tarjeta como seleccionada
-                });
+            // Cambia el precio según el producto seleccionado
+            productoSelect.addEventListener('change', function () {
+                const precio = this.options[this.selectedIndex].dataset.precio;
+                precioProducto.textContent = `S/. ${precio}`;
             });
         });
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"></script>
 {% endblock %}

@@ -8,6 +8,9 @@ from productos.models import Producto
 from rest_framework import viewsets
 from .serializers import HuespedSerializer
 
+
+# MODELO DE CONSUMO
+
 class HuespedViewSet(viewsets.ModelViewSet):
     queryset = Huesped.objects.all()
     serializer_class = HuespedSerializer

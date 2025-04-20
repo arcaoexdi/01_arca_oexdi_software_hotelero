@@ -14,20 +14,6 @@
     </a>
   </div>
 
-  <!-- Formulario para seleccionar habitación -->
-  <div class="mb-4">
-    <label for="{{ form.habitacion.id_for_label }}" class="form-label">Selecciona una habitación</label>
-    {{ form.habitacion|add_class:"form-select" }}
-    {% if form.habitacion.errors %}
-      <div class="invalid-feedback d-block">
-        {% for error in form.habitacion.errors %}
-          <p>{{ error }}</p>
-        {% endfor %}
-      </div>
-    {% endif %}
-  </div>
-
-  <!-- Mostrar las habitaciones disponibles en el select -->
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
     {% for habitacion in habitaciones %}
     <div class="col">
