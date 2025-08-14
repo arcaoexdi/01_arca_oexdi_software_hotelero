@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 🏨 Django SofHotel
 08_gestión_hotel es un sistema de gestión hotelera desarrollado con Django, diseñado para facilitar el control de huéspedes, el registro de consumo de productos y el proceso completo de check-in y check-out. Ideal para pequeñas y medianas empresas del sector hotelero que desean optimizar la administración y mejorar la experiencia del cliente.
 
@@ -63,3 +64,7 @@ Este proyecto está bajo la licencia MIT. Consulta el archivo LICENSE para más 
 Desarrollado con pasión por Sebastián Miranda
 📧 Contacto Whatsapp: +57 313 4319852 
 💼 Proyecto para la gestion hotelera de manera basica y superficial. 
+=======
+# 01_arca_oexdi_software_hotelero
+Software hotelero elaborado en Django
+>>>>>>> 85e9e948c5e5b570daf4895c8a5055f5932ee99b
