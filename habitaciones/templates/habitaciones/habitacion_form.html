@@ -1,117 +1,80 @@
-{% extends 'base_generic.html' %} {% load widget_tweaks %} {% block content %}
-<div class="container py-5">
-  <h2 class="text-center mb-5 text-gradient fw-bold display-6">
-    {% if form.instance.pk %}Editar{% else %}Agregar{% endif %} Habitación
+{% extends 'base_generic.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-12 px-6 animate__animated animate__fadeIn">
+  
+  <!-- Título -->
+  <h2 class="text-3xl md:text-4xl font-extrabold text-center text-gold mb-10 tracking-wide drop-shadow-lg">
+    {% if form.instance.pk %}✏️ Editar{% else %}➕ Agregar{% endif %} Habitación
   </h2>
 
-  <div
-    class="card shadow-lg border-0 rounded-5 p-5 bg-body bg-opacity-75 glass-effect animate__animated animate__fadeIn"
-  >
-    <form
-      method="POST"
-      enctype="multipart/form-data"
-      class="needs-validation"
-      novalidate
-    >
-      {% csrf_token %}
+  <!-- Formulario -->
+  <form method="POST" enctype="multipart/form-data" 
+        class="space-y-8 bg-white/10 backdrop-blur-xl border border-white/20 p-10 rounded-3xl shadow-2xl hover:shadow-gold/30 transition">
+    {% csrf_token %}
 
-      <div class="row g-4">
-        <div class="col-md-4">
-          <label
-            for="id_numero"
-            class="form-label text-body-emphasis fw-semibold"
-            >Número</label
-          >
-          {{ form.numero|add_class:"form-control form-control-lg rounded-4
-          border-0 shadow-sm bg-white bg-opacity-75 text-dark" }}
-        </div>
-        <div class="col-md-4">
-          <label for="id_tipo" class="form-label text-body-emphasis fw-semibold"
-            >Tipo</label
-          >
-          {{ form.tipo|add_class:"form-select form-select-lg rounded-4 border-0
-          shadow-sm bg-white bg-opacity-75 text-dark" }}
-        </div>
-        <div class="col-md-4">
-          <label
-            for="id_estado_habitacion"
-            class="form-label text-body-emphasis fw-semibold"
-            >Estado</label
-          >
-          {{ form.estado_habitacion|add_class:"form-select form-select-lg
-          rounded-4 border-0 shadow-sm bg-white bg-opacity-75 text-dark" }}
-        </div>
+    <!-- Número, Tipo y Estado -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+        <label for="id_numero" class="block text-sm font-semibold text-gold mb-2">Número</label>
+        {% render_field form.numero class="w-full px-4 py-2 rounded-xl border border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold/70 bg-white/90 text-dark shadow-sm" placeholder="Ej: 101" %}
       </div>
 
-      <div class="row g-4 mt-1">
-        <div class="col-md-6">
-          <label
-            for="id_capacidad"
-            class="form-label text-body-emphasis fw-semibold"
-            >Capacidad</label
-          >
-          {{ form.capacidad|add_class:"form-control form-control-lg rounded-4
-          border-0 shadow-sm bg-white bg-opacity-75 text-dark" }}
-        </div>
-        <div class="col-md-6">
-          <label
-            for="id_precio"
-            class="form-label text-body-emphasis fw-semibold"
-            >Precio</label
-          >
-          {{ form.precio|add_class:"form-control form-control-lg rounded-4
-          border-0 shadow-sm bg-white bg-opacity-75 text-dark" }}
-        </div>
+      <div>
+        <label for="id_tipo" class="block text-sm font-semibold text-gold mb-2">Tipo</label>
+        {% render_field form.tipo class="w-full px-4 py-2 rounded-xl border border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold/70 bg-white/90 text-dark shadow-sm" %}
       </div>
 
-      <div class="row g-4 mt-1">
-        <div class="col-12">
-          <label
-            for="id_descripcion"
-            class="form-label text-body-emphasis fw-semibold"
-            >Descripción</label
-          >
-          {{ form.descripcion|add_class:"form-control form-control-lg rounded-4
-          border-0 shadow-sm bg-white bg-opacity-75 text-dark" }}
-        </div>
+      <div>
+        <label for="id_estado_habitacion" class="block text-sm font-semibold text-gold mb-2">Estado</label>
+        {% render_field form.estado_habitacion class="w-full px-4 py-2 rounded-xl border border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold/70 bg-white/90 text-dark shadow-sm" %}
+      </div>
+    </div>
+
+    <!-- Capacidad y Precio -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="id_capacidad" class="block text-sm font-semibold text-gold mb-2">Capacidad</label>
+        {% render_field form.capacidad class="w-full px-4 py-2 rounded-xl border border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold/70 bg-white/90 text-dark shadow-sm" %}
       </div>
 
-      <div class="row g-4 mt-1">
-        <div class="col-12">
-          <label
-            for="id_imagen"
-            class="form-label text-body-emphasis fw-semibold"
-            >Imagen (Opcional)</label
-          >
-          {{ form.imagen|add_class:"form-control form-control-lg rounded-4
-          border-0 shadow-sm bg-white bg-opacity-75 text-dark" }}
-        </div>
+      <div>
+        <label for="id_precio" class="block text-sm font-semibold text-gold mb-2">Precio</label>
+        {% render_field form.precio class="w-full px-4 py-2 rounded-xl border border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold/70 bg-white/90 text-dark shadow-sm" %}
       </div>
+    </div>
 
-      <div class="text-center mt-5">
-        <button
-          type="submit"
-          class="btn btn-success btn-lg px-5 py-2 rounded-pill shadow fw-bold"
-        >
-          <i class="bi bi-check-circle me-2"></i> Guardar
-        </button>
-        <a
-          href="{% url 'habitaciones:habitacion_list' %}"
-          class="btn btn-outline-secondary btn-lg ms-3 px-5 py-2 rounded-pill shadow-sm"
-        >
-          <i class="bi bi-arrow-left-circle me-2"></i> Volver
-        </a>
+    <!-- Descripción -->
+    <div>
+      <label for="id_descripcion" class="block text-sm font-semibold text-gold mb-2">Descripción</label>
+      {% render_field form.descripcion class="w-full px-4 py-3 rounded-xl border border-gold/40 focus:outline-none focus:ring-2 focus:ring-gold/70 bg-white/90 text-dark shadow-sm" rows="3" %}
+    </div>
 
-        {% if form.instance.pk %}
-        <a
-          href="{% url 'habitaciones:habitacion_confirm_delete' form.instance.pk %}"
-          class="btn btn-outline-danger btn-lg ms-3 px-5 py-2 rounded-pill shadow-sm"
-        >
-          <i class="bi bi-trash me-2"></i> Eliminar
-        </a>
-        {% endif %}
-      </div>
-    </form>
-  </div>
+    <!-- Imagen -->
+    <div>
+      <label for="id_imagen" class="block text-sm font-semibold text-gold mb-2">Imagen (Opcional)</label>
+      {% render_field form.imagen class="w-full px-4 py-2 rounded-xl border border-gold/40 bg-white/90 text-dark shadow-sm file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gold file:text-luxury hover:file:bg-yellow-400 cursor-pointer" %}
+    </div>
+
+    <!-- Botones -->
+    <div class="flex flex-wrap justify-center gap-4 pt-8">
+      <button type="submit" 
+              class="bg-gold text-luxury px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 hover:shadow-2xl hover:bg-yellow-400 transition transform">
+        💾 Guardar
+      </button>
+      <a href="{% url 'habitaciones:habitacion_list' %}" 
+         class="bg-gray-600 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 hover:shadow-xl hover:bg-gray-700 transition">
+        🔙 Volver
+      </a>
+
+      {% if form.instance.pk %}
+      <a href="{% url 'habitaciones:habitacion_confirm_delete' form.instance.pk %}" 
+         class="bg-red-600 text-white px-8 py-3 rounded-full font-bold shadow-lg hover:scale-105 hover:shadow-2xl hover:bg-red-700 transition">
+        🗑 Eliminar
+      </a>
+      {% endif %}
+    </div>
+  </form>
 </div>
 {% endblock %}

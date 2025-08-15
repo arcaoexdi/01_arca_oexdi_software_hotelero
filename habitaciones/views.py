@@ -44,9 +44,16 @@ class HabitacionCreateView(CreateView):
     form_class = HabitacionForm
     template_name = 'habitaciones/habitacion_form.html'
     success_url = reverse_lazy('habitaciones:habitacion_list')
-    
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
+
+    def form_invalid(self, form):
+        print("❌ Errores del formulario:", form.errors)  # Para consola
+        messages.error(self.request, "El formulario contiene errores. Revisa los campos.")
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        messages.success(self.request, "✅ Habitación creada correctamente.")
+        return super().form_valid(form)
+
 
 
 # --------------------------------

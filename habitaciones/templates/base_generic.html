@@ -3,14 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arca Sof Hotel</title>
+    <title>{% block title %}ArcaSof Hotel{% endblock %}</title>
 
     {% load static %}
-    <link
-      rel="icon"
-      href="{% static 'images/icon_hotel.png' %}"
-      type="image/png"
-    />
+    <link rel="icon" href="{% static 'images/icon_hotel.png' %}" type="image/png" />
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +16,7 @@
           extend: {
             colors: {
               gold: "#d4af37",
-              dark: "#1a1a1a",
+              dark: "#0b0b0b",
               luxury: "#1f2937",
             },
           },
@@ -28,144 +24,91 @@
       };
     </script>
   </head>
-  <body class="bg-dark text-white font-sans">
+  <body class="bg-dark text-white font-sans antialiased">
     <!-- Navbar -->
-    <nav
-      class="fixed top-0 left-0 w-full bg-luxury/90 backdrop-blur border-b border-gold shadow-lg z-50"
-    >
-      <div
-        class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between"
-      >
+    <nav id="navbar" class="fixed top-0 left-0 w-full bg-transparent backdrop-blur-md transition-all duration-500 border-b border-transparent shadow-lg z-50">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <!-- Logo -->
-        <a
-          href="#"
-          class="flex items-center space-x-3 text-gold font-bold text-2xl hover:scale-105 transition-transform"
-        >
-          <img
-            src="{% static 'images/icon_hotel.png' %}"
-            alt="Icon Hotel"
-            class="w-10 h-10 drop-shadow-lg"
-          />
-          <span>Arca Sof Hotel</span>
+        <a href="{% url 'habitaciones:habitacion_list' %}" class="flex items-center space-x-3 text-gold font-bold text-2xl hover:scale-110 hover:drop-shadow-[0_0_8px_#d4af37] transition-all">
+          <img src="{% static 'images/icon_hotel.png' %}" alt="Icon Hotel" class="w-10 h-10 drop-shadow-lg" />
+          <span>ArcaSof Hotel</span>
         </a>
 
         <!-- Menú Desktop -->
-        <div class="hidden md:flex items-center space-x-6 font-medium">
-          <a
-            href="{% url 'habitaciones:habitacion_list' %}"
-            class="px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition"
-            >Habitaciones</a
-          >
-          <a
-            href="{% url 'consumos:consumo_list' %}"
-            class="px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition"
-            >Consumos</a
-          >
-          <a
-            href="{% url 'productos:producto_list' %}"
-            class="px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition"
-            >Productos</a
-          >
+        <div class="hidden md:flex items-center space-x-8 font-medium">
+          <a href="{% url 'habitaciones:habitacion_list' %}" class="relative group transition {% if request.resolver_match.url_name == 'habitacion_list' %}text-gold{% endif %}">
+            Habitaciones
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="{% url 'consumos:consumo_list' %}" class="relative group transition {% if request.resolver_match.url_name == 'consumo_list' %}text-gold{% endif %}">
+            Consumos
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+          </a>
+          <a href="{% url 'productos:producto_list' %}" class="relative group transition {% if request.resolver_match.url_name == 'producto_list' %}text-gold{% endif %}">
+            Productos
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+          </a>
           {% if habitacion and habitacion.id %}
-          <a
-            href="{% url 'habitaciones:huesped_list' habitacion.id %}"
-            class="px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition"
-            >Huéspedes Activos</a
-          >
+          <a href="{% url 'habitaciones:huesped_list' habitacion.id %}" class="relative group transition">
+            Huéspedes Activos
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+          </a>
           {% endif %}
-          <a
-            href="{% url 'huespedes:huesped_list_all' %}"
-            class="px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition"
-            >Huéspedes</a
-          >
+          <a href="{% url 'huespedes:huesped_list_all' %}" class="relative group transition {% if request.resolver_match.url_name == 'huesped_list_all' %}text-gold{% endif %}">
+            Huéspedes
+            <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-gold transition-all duration-300 group-hover:w-full"></span>
+          </a>
         </div>
 
         <!-- Botón móvil -->
-        <button id="menu-btn" class="md:hidden text-gold focus:outline-none">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-8 w-8"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
+        <button id="menu-btn" class="md:hidden text-gold focus:outline-none transition-transform hover:scale-110">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
       </div>
 
       <!-- Menú móvil -->
-      <div
-        id="mobile-menu"
-        class="hidden flex-col space-y-2 px-6 pb-4 md:hidden"
-      >
-        <a
-          href="{% url 'habitaciones:habitacion_list' %}"
-          class="block px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition"
-          >Habitaciones</a
-        >
-        <a
-          href="{% url 'consumos:consumo_list' %}"
-          class="block px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition"
-          >Consumos</a
-        >
-        <a
-          href="{% url 'productos:producto_list' %}"
-          class="block px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition"
-          >Productos</a
-        >
+      <div id="mobile-menu" class="hidden flex-col space-y-3 px-6 pb-4 md:hidden animate-fade-in-down">
+        <a href="{% url 'habitaciones:habitacion_list' %}" class="block px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition">Habitaciones</a>
+        <a href="{% url 'consumos:consumo_list' %}" class="block px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition">Consumos</a>
+        <a href="{% url 'productos:producto_list' %}" class="block px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition">Productos</a>
         {% if habitacion and habitacion.id %}
-        <a
-          href="{% url 'habitaciones:huesped_list' habitacion.id %}"
-          class="block px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition"
-          >Huéspedes Activos</a
-        >
+        <a href="{% url 'habitaciones:huesped_list' habitacion.id %}" class="block px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition">Huéspedes Activos</a>
         {% endif %}
-        <a
-          href="{% url 'huespedes:huesped_list_all' %}"
-          class="block px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition"
-          >Huéspedes</a
-        >
+        <a href="{% url 'huespedes:huesped_list_all' %}" class="block px-4 py-2 rounded-lg hover:bg-gold hover:text-luxury transition">Huéspedes</a>
       </div>
     </nav>
 
-    <!-- Header ilustrado -->
-    <header
-      class="relative h-64 mt-20 bg-gradient-to-r from-luxury to-dark flex items-center justify-center"
-    >
-      <h1 class="relative text-4xl font-extrabold text-gold drop-shadow-lg">
-        Sistema de Gestión Hotelera
-      </h1>
-    </header>
-
     <!-- Contenido -->
-    <main class="max-w-7xl mx-auto px-6 py-8">
+    <main class="max-w-7xl mx-auto px-6 py-28">
       {% block content %}{% endblock %}
     </main>
 
     <!-- Toasts -->
     <div class="fixed bottom-4 right-4 space-y-3 z-50">
-      <div
-        id="successToast"
-        class="hidden bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg"
-      >
+      <div id="successToast" class="hidden transform translate-x-20 opacity-0 transition-all duration-500 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg">
         Huésped actualizado correctamente ✅
       </div>
-      <div
-        id="errorToast"
-        class="hidden bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg"
-      >
+      <div id="errorToast" class="hidden transform translate-x-20 opacity-0 transition-all duration-500 bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg">
         Algo salió mal 😢
       </div>
     </div>
 
     <!-- Scripts -->
     <script>
+      // Navbar scroll effect
+      window.addEventListener("scroll", function () {
+        const navbar = document.getElementById("navbar");
+        if (window.scrollY > 50) {
+          navbar.classList.add("bg-luxury/95", "border-gold");
+          navbar.classList.remove("bg-transparent", "border-transparent");
+        } else {
+          navbar.classList.add("bg-transparent", "border-transparent");
+          navbar.classList.remove("bg-luxury/95", "border-gold");
+        }
+      });
+
       // Menú móvil
       const menuBtn = document.getElementById("menu-btn");
       const mobileMenu = document.getElementById("mobile-menu");
@@ -173,14 +116,32 @@
         mobileMenu.classList.toggle("hidden");
       });
 
-      // Toasts
+      // Toasts con animación
       function showToast(id) {
         const toast = document.getElementById(id);
-        toast.classList.remove("hidden");
+        toast.classList.remove("hidden", "translate-x-20", "opacity-0");
         setTimeout(() => {
-          toast.classList.add("hidden");
+          toast.classList.add("translate-x-20", "opacity-0");
+          setTimeout(() => toast.classList.add("hidden"), 500);
         }, 3000);
       }
     </script>
+
+    <!-- Animaciones extra -->
+    <style>
+      @keyframes fade-in-down {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-down {
+        animation: fade-in-down 0.4s ease-out;
+      }
+    </style>
   </body>
 </html>
