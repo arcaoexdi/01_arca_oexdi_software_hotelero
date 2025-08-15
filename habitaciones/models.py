@@ -49,6 +49,12 @@ class Habitacion(models.Model):
         validators=[MinValueValidator(1)],
         verbose_name="Capacidad Máxima"
     )
+    
+    descripcion = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Descripción"
+    )
 
     imagen = models.ImageField(
         upload_to='habitaciones/', null=True, blank=True

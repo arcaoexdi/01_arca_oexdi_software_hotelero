@@ -1,11 +1,12 @@
-{% extends 'base_generic.html' %}
-{% load static %}
-
-{% block content %}
+{% extends 'base_generic.html' %} {% load static %} {% block content %}
 <div class="container py-5">
   <!-- Tarjeta de detalles de la habitación -->
-  <div class="card shadow-lg border-0 rounded-4 glass-effect bg-body bg-opacity-75 animate__animated animate__fadeIn">
-    <div class="card-header bg-primary bg-gradient text-white text-center rounded-top-4">
+  <div
+    class="card shadow-lg border-0 rounded-4 glass-effect bg-body bg-opacity-75 animate__animated animate__fadeIn"
+  >
+    <div
+      class="card-header bg-primary bg-gradient text-white text-center rounded-top-4"
+    >
       <h2 class="mb-0 fw-bold">Habitación #{{ habitacion.numero }}</h2>
     </div>
 
@@ -13,10 +14,20 @@
       <!-- Imagen -->
       <div class="mb-4">
         {% if habitacion.imagen %}
-          <img src="{{ habitacion.imagen.url }}" class="img-fluid rounded-4 shadow-sm" alt="Imagen de la habitación" style="max-height: 300px; object-fit: cover; width: 100%;">
+        <img
+          src="{{ habitacion.imagen.url }}"
+          class="img-fluid rounded-4 shadow-sm"
+          alt="Imagen de la habitación"
+          style="max-height: 300px; object-fit: cover; width: 100%"
+        />
         {% else %}
-          <img src="{% static 'images/no-image.png' %}" class="img-fluid rounded-4 shadow-sm" alt="Sin imagen disponible" style="max-height: 300px; width: 100%;">
-          <p class="text-muted mt-2 fst-italic">No hay imagen disponible</p>
+        <img
+          src="{% static 'images/no-image.png' %}"
+          class="img-fluid rounded-4 shadow-sm"
+          alt="Sin imagen disponible"
+          style="max-height: 300px; width: 100%"
+        />
+        <p class="text-muted mt-2 fst-italic">No hay imagen disponible</p>
         {% endif %}
       </div>
 
@@ -25,13 +36,17 @@
         <div class="col-md-3">
           <div class="bg-white bg-opacity-75 rounded-3 p-3 shadow-sm">
             <p class="mb-1 fw-semibold text-muted">Tipo</p>
-            <p class="mb-0 text-dark">{{ habitacion.get_tipo_habitacion_display }}</p>
+            <p class="mb-0 text-dark">
+              {{ habitacion.get_tipo_habitacion_display }}
+            </p>
           </div>
         </div>
         <div class="col-md-3">
           <div class="bg-white bg-opacity-75 rounded-3 p-3 shadow-sm">
             <p class="mb-1 fw-semibold text-muted">Estado</p>
-            <p class="mb-0 text-dark">{{ habitacion.get_estado_habitacion_display }}</p>
+            <p class="mb-0 text-dark">
+              {{ habitacion.get_estado_habitacion_display }}
+            </p>
           </div>
         </div>
         <div class="col-md-3">
@@ -43,7 +58,9 @@
         <div class="col-md-3">
           <div class="bg-white bg-opacity-75 rounded-3 p-3 shadow-sm">
             <p class="mb-1 fw-semibold text-muted">Precio</p>
-            <p class="mb-0 text-success fw-bold">${{ habitacion.precio|floatformat:2 }}</p>
+            <p class="mb-0 text-success fw-bold">
+              ${{ habitacion.precio|floatformat:2 }}
+            </p>
           </div>
         </div>
       </div>
@@ -51,55 +68,69 @@
   </div>
 
   <!-- Tabla de huéspedes -->
-  <div class="card shadow-lg border-0 rounded-4 mt-5 glass-effect bg-body bg-opacity-75 animate__animated animate__fadeIn">
-    <div class="card-header bg-secondary bg-gradient text-white text-center fw-bold rounded-top-4">
+  <div
+    class="card shadow-lg border-0 rounded-4 mt-5 glass-effect bg-body bg-opacity-75 animate__animated animate__fadeIn"
+  >
+    <div
+      class="card-header bg-secondary bg-gradient text-white text-center fw-bold rounded-top-4"
+    >
       <h3 class="mb-0">Huéspedes en esta habitación</h3>
     </div>
     <div class="card-body">
       {% if huespedes %}
-        <div class="table-responsive">
-          <table class="table table-hover align-middle text-center rounded-3 overflow-hidden">
-            <thead class="table-light">
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Tipo Doc.</th>
-                <th>Número</th>
-                <th>Correo</th>
-                <th>Teléfono</th>
-                <th>Vehículo</th>
-                <th>Placas</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for huesped in huespedes %}
-              <tr id="huesped-{{ huesped.id }}">
-                <td>{{ huesped.nombre }}</td>
-                <td>{{ huesped.apellido }}</td>
-                <td>{{ huesped.tipo_documento }}</td>
-                <td>{{ huesped.numero_documento }}</td>
-                <td>{{ huesped.correo_electronico }}</td>
-                <td>{{ huesped.telefono }}</td>
-                <td>{{ huesped.vehiculo }}</td>
-                <td>{{ huesped.placas }}</td>
-                <td>
-                  <div class="d-flex justify-content-center gap-2">
-                    <button class="btn btn-sm btn-warning rounded-pill px-3 edit-huesped" data-id="{{ huesped.id }}">
-                      <i class="bi bi-pencil-square"></i>
-                    </button>
-                    <button class="btn btn-sm btn-danger rounded-pill px-3 delete-huesped" data-id="{{ huesped.id }}">
-                      <i class="bi bi-trash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+      <div class="table-responsive">
+        <table
+          class="table table-hover align-middle text-center rounded-3 overflow-hidden"
+        >
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Tipo Doc.</th>
+              <th>Número</th>
+              <th>Correo</th>
+              <th>Teléfono</th>
+              <th>Vehículo</th>
+              <th>Placas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for huesped in huespedes %}
+            <tr id="huesped-{{ huesped.id }}">
+              <td>{{ huesped.nombre }}</td>
+              <td>{{ huesped.apellido }}</td>
+              <td>{{ huesped.tipo_documento }}</td>
+              <td>{{ huesped.numero_documento }}</td>
+              <td>{{ huesped.correo_electronico }}</td>
+              <td>{{ huesped.telefono }}</td>
+              <td>{{ huesped.vehiculo }}</td>
+              <td>{{ huesped.placas }}</td>
+              <td>
+                <div class="d-flex justify-content-center gap-2">
+                  <button
+                    class="btn btn-sm btn-warning rounded-pill px-3 edit-huesped"
+                    data-id="{{ huesped.id }}"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-danger rounded-pill px-3 delete-huesped"
+                    data-id="{{ huesped.id }}"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
       {% else %}
-        <p class="text-muted text-center fst-italic">No hay huéspedes en esta habitación actualmente.</p>
+      <p class="text-muted text-center fst-italic">
+        No hay huéspedes en esta habitación actualmente.
+      </p>
       {% endif %}
     </div>
   </div>

@@ -4,18 +4,19 @@ from .models import Habitacion
 class HabitacionForm(forms.ModelForm):
     """
     Formulario para la creación y edición de una habitación con validaciones adicionales.
-    Incluye soporte para imágenes.
+    Incluye soporte para imágenes y descripción.
     """
     class Meta:
         model = Habitacion
-        fields = ['numero', 'tipo', 'estado_habitacion', 'capacidad', 'precio', 'imagen']
+        fields = ['numero', 'tipo', 'estado_habitacion', 'capacidad', 'precio', 'descripcion', 'imagen']
         widgets = {
-            'numero': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ej: 101'}),
-            'tipo': forms.Select(attrs={'class': 'form-control'}),
-            'estado_habitacion': forms.Select(attrs={'class': 'form-control'}),  # Cambié 'estado' por 'estado_habitacion'
-            'capacidad': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
-            'precio': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
-            'imagen': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'numero': forms.TextInput(attrs={'placeholder': 'Ej: 101'}),
+            'tipo': forms.Select(),
+            'estado_habitacion': forms.Select(),
+            'capacidad': forms.NumberInput(attrs={'min': 1}),
+            'precio': forms.NumberInput(attrs={'min': 0}),
+            'descripcion': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Descripción de la habitación'}),
+            'imagen': forms.ClearableFileInput(),
         }
 
     def clean_capacidad(self):
