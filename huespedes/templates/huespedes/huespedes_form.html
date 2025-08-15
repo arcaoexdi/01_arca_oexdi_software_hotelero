@@ -1,86 +1,82 @@
 {% extends "base_generic.html" %}
-{% load static %}
+{% load static widget_tweaks %}
 
 {% block content %}
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card shadow-lg border-0 rounded-4">
-        <div class="card-header bg-gradient bg-primary text-white rounded-top-4">
-          <h3 class="mb-0">
-            <i class="bi bi-person-vcard-fill me-2"></i>
-            {% if object %}Editar{% else %}Nuevo{% endif %} Huésped
-          </h3>
-        </div>
-
-        <div class="card-body p-4 bg-light">
-
-          {# ✅ MOSTRAR LA HABITACIÓN SI EXISTE #}
-          {% if habitacion %}
-            <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
-              <i class="bi bi-door-closed-fill me-2 fs-4"></i>
-              <div>
-                Registrando huésped para la <strong>Habitación {{ habitacion.numero }}</strong>
-              </div>
-            </div>
-          {% endif %}
-
-          <form id="huespedForm" method="post" novalidate
-                action="{% if object %}
-                          {% url 'huespedes:huesped_edit' object.id %}
-                        {% elif habitacion %}
-                          {% url 'huespedes:huesped_create' habitacion.id %}
-                        {% else %}
-                          #
-                        {% endif %}">
-            {% csrf_token %}
-            <div class="row">
-              {# Renderizamos cada campo del formulario con etiquetas y validaciones #}
-              {% for field in form %}
-                <div class="col-md-6 mb-3">
-                  <label for="{{ field.id_for_label }}" class="form-label fw-semibold text-dark">
-                    {{ field.label }}
-                  </label>
-                  {{ field }}
-                  {% if field.help_text %}
-                    <div class="form-text text-muted">{{ field.help_text }}</div>
-                  {% endif %}
-                  {% for error in field.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-              {% endfor %}
-            </div>
-
-            <div class="d-flex justify-content-between mt-4">
-              {# Botón de volver según si hay habitación asociada #}
-              {% if habitacion %}
-                <a href="{% url 'habitaciones:huesped_list' habitacion.id %}" class="btn btn-outline-dark btn-lg rounded-pill">
-                  <i class="bi bi-arrow-left-circle me-2"></i> Volver
-                </a>
-              {% else %}
-                <a href="{% url 'habitaciones:habitacion_list' %}" class="btn btn-outline-secondary btn-lg rounded-pill">
-                  <i class="bi bi-house-door-fill me-2"></i> Volver al inicio
-                </a>
-              {% endif %}
-
-              <button type="submit" class="btn btn-success btn-lg rounded-pill">
-                <i class="bi bi-check2-circle me-2"></i> Guardar
-              </button>
-            </div>
-          </form>
-
-          {# 🚨 Alerta si no hay habitación (opcional pero recomendable) #}
-          {% if not habitacion and not object %}
-            <div class="alert alert-warning mt-4">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>
-              No se proporcionó una habitación válida. No se podrá crear el huésped hasta que selecciones una.
-            </div>
-          {% endif %}
-
-        </div>
-      </div>
-    </div>
+<div class="max-w-5xl mx-auto py-12 px-6">
+  <!-- Encabezado -->
+  <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white text-center py-6 rounded-2xl shadow-xl mb-8">
+    <h2 class="text-3xl font-extrabold">
+      {% if object %} ✏️ Editar {% else %} ➕ Nuevo {% endif %} Huésped
+    </h2>
   </div>
+
+  <!-- Info de la habitación -->
+  {% if habitacion %}
+    <div class="bg-blue-600/20 border border-blue-400/40 text-blue-200 px-6 py-3 mb-8 rounded-xl flex items-center gap-3">
+      <span class="text-2xl">🚪</span>
+      <p>
+        Registrando huésped para la <strong class="text-gold">Habitación {{ habitacion.numero }}</strong>
+      </p>
+    </div>
+  {% endif %}
+
+  <!-- Formulario -->
+  <form id="huespedForm" method="post" novalidate enctype="multipart/form-data"
+        action="{% if object %}
+                  {% url 'huespedes:huesped_edit' object.id %}
+                {% elif habitacion %}
+                  {% url 'huespedes:huesped_create' habitacion.id %}
+                {% else %}
+                  #
+                {% endif %}"
+        class="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-2xl shadow-xl space-y-8">
+    {% csrf_token %}
+
+    <!-- Campos en grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-gold mb-2">
+            {{ field.label }}
+          </label>
+          {% render_field field class="w-full px-4 py-2 rounded-lg border border-gold/30 focus:ring-2 focus:ring-gold focus:outline-none bg-white/90 text-dark" %}
+
+          {% if field.help_text %}
+            <p class="text-xs text-gray-400 mt-1">{{ field.help_text }}</p>
+          {% endif %}
+          {% for error in field.errors %}
+            <p class="text-xs text-red-500 mt-1">⚠️ {{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Botones -->
+    <div class="flex flex-wrap justify-between items-center gap-4 pt-6 border-t border-white/20">
+      {% if habitacion %}
+        <a href="{% url 'habitaciones:huesped_list' habitacion.id %}"
+           class="px-6 py-2 rounded-full bg-gray-500 hover:bg-gray-600 text-white font-semibold shadow-md hover:scale-105 transition">
+          🔙 Volver
+        </a>
+      {% else %}
+        <a href="{% url 'habitaciones:habitacion_list' %}"
+           class="px-6 py-2 rounded-full bg-gray-500 hover:bg-gray-600 text-white font-semibold shadow-md hover:scale-105 transition">
+          🏨 Volver al inicio
+        </a>
+      {% endif %}
+
+      <button type="submit"
+              class="px-6 py-2 rounded-full bg-gold text-luxury font-semibold shadow-lg hover:scale-105 hover:shadow-xl transition">
+        💾 Guardar
+      </button>
+    </div>
+  </form>
+
+  <!-- Alerta si no hay habitación -->
+  {% if not habitacion and not object %}
+    <div class="bg-yellow-600/20 border border-yellow-400/40 text-yellow-200 px-6 py-3 mt-6 rounded-xl flex items-center gap-3">
+      ⚠️ No se proporcionó una habitación válida. No se podrá crear el huésped hasta que selecciones una.
+    </div>
+  {% endif %}
 </div>
 {% endblock %}

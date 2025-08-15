@@ -2,57 +2,72 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-bold text-white">{{ 'Huéspedes alojados' }}</h2>
+<div class="max-w-6xl mx-auto py-12 px-6">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-gold drop-shadow">
+      Huéspedes alojados
+    </h2>
+
     {% if habitacion %}
-      <a href="{% url 'huespedes:huesped_create' habitacion_id=habitacion.id %}" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm">
-        <i class="bi bi-person-plus-fill me-1"></i> Nuevo huésped
+      <a href="{% url 'huespedes:huesped_create' habitacion_id=habitacion.id %}"
+         class="px-6 py-3 rounded-full bg-gold text-luxury font-semibold shadow-lg hover:scale-105 hover:shadow-2xl transition transform">
+        ➕ Nuevo huésped
       </a>
     {% else %}
-      <div class="alert alert-info text-center" role="alert">
+      <div class="w-full md:w-auto bg-blue-600/20 border border-blue-400/30 text-blue-300 px-4 py-2 rounded-xl text-center">
         No hay habitación seleccionada.
       </div>
     {% endif %}
   </div>
 
+  <!-- Lista de huéspedes -->
   {% if huespedes %}
-    <div class="list-group shadow-sm">
+    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
       {% for huesped in huespedes %}
-        <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-3" style="background-color: #f8f9fa; color: #212529; border-radius: 15px;">
+        <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-lg hover:shadow-2xl p-5 flex flex-col justify-between transition transform hover:-translate-y-1">
+          <!-- Info -->
           <div>
-            <h5 class="mb-1">{{ huesped.nombre }} {{ huesped.apellido }}</h5>
-            <small class="text-muted">Habitación: {{ huesped.habitacion.numero }}</small>
+            <h5 class="text-xl font-bold text-white mb-1">
+              👤 {{ huesped.nombre }} {{ huesped.apellido }}
+            </h5>
+            <p class="text-sm text-gray-300">
+              Habitación: <span class="font-semibold text-gold">#{{ huesped.habitacion.numero }}</span>
+            </p>
           </div>
-          <div class="btn-group">
-            <!-- Ver detalle -->
-            <a href="{% url 'huespedes:huesped_detail' pk=huesped.pk %}" class="btn btn-sm btn-outline-primary">
-              <i class="bi bi-eye"></i> Ver
+
+          <!-- Botones -->
+          <div class="flex justify-between gap-2 mt-5">
+            <a href="{% url 'huespedes:huesped_detail' pk=huesped.pk %}"
+               class="flex-1 text-center px-3 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition">
+              👁 Ver
             </a>
-            <!-- Editar huésped -->
-            <a href="{% url 'huespedes:huesped_edit' pk=huesped.pk %}" class="btn btn-sm btn-outline-warning">
-              <i class="bi bi-pencil-square"></i> Editar
+            <a href="{% url 'huespedes:huesped_edit' pk=huesped.pk %}"
+               class="flex-1 text-center px-3 py-2 rounded-full bg-yellow-500 hover:bg-yellow-600 text-white text-sm font-medium transition">
+              ✏️ Editar
             </a>
-            <!-- Eliminar huésped -->
-            <a href="{% url 'huespedes:huesped_delete' pk=huesped.pk %}" class="btn btn-sm btn-outline-danger">
-              <i class="bi bi-trash"></i> Eliminar
+            <a href="{% url 'huespedes:huesped_delete' pk=huesped.pk %}"
+               class="flex-1 text-center px-3 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition">
+              🗑 Eliminar
             </a>
           </div>
         </div>
       {% endfor %}
     </div>
   {% else %}
-    <div class="alert alert-info text-center" role="alert">
-      No hay huéspedes registrados aún en esta habitación.
-    </div>
+    <!-- Vacío -->
+    <div class="bg-white/10 border border-white/20 rounded-2xl p-8 text-center shadow-lg">
+      <p class="text-gray-400 text-lg mb-4 italic">
+        No hay huéspedes registrados aún en esta habitación.
+      </p>
 
-    {% if habitacion %}
-      <div class="text-center mt-4">
-        <a href="{% url 'huespedes:huesped_create' habitacion_id=habitacion.id %}" class="btn btn-primary btn-lg rounded-pill" style="background-color: #007BFF; border-color: #007BFF;">
-          <i class="bi bi-person-plus-fill me-2"></i> Registrar primer huésped
+      {% if habitacion %}
+        <a href="{% url 'huespedes:huesped_create' habitacion_id=habitacion.id %}"
+           class="inline-block px-8 py-3 rounded-full bg-gold text-luxury font-semibold shadow-lg hover:scale-105 hover:shadow-2xl transition transform">
+          ➕ Registrar primer huésped
         </a>
-      </div>
-    {% endif %}
+      {% endif %}
+    </div>
   {% endif %}
 </div>
 {% endblock %}

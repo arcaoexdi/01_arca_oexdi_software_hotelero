@@ -2,71 +2,73 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card shadow-lg border-0 rounded-4" style="max-width: 700px; width: 100%; margin-top: 80px;">
-        <div class="card-header bg-gradient bg-primary text-white rounded-top-4">
-          <h3 class="mb-0">
-            <i class="bi bi-person-vcard-fill me-2"></i> Detalle del Huésped
-          </h3>
+<div class="py-10 px-6 flex justify-center">
+  <div class="w-full max-w-3xl bg-white/10 backdrop-blur rounded-2xl shadow-2xl border border-white/20 overflow-hidden animate__animated animate__fadeIn">
+
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-indigo-600 to-blue-700 text-white py-5 px-6 text-center">
+      <h2 class="text-2xl md:text-3xl font-extrabold flex items-center justify-center gap-2">
+        <i class="bi bi-person-vcard-fill"></i> Detalle del Huésped
+      </h2>
+    </div>
+
+    <div class="p-8">
+      <!-- Mostrar habitación -->
+      {% if object.habitacion %}
+      <div class="bg-blue-100/10 border border-blue-400/30 text-blue-200 p-4 rounded-xl flex items-center gap-3 mb-6">
+        <i class="bi bi-door-closed-fill text-2xl"></i>
+        <p>
+          Registrado en la <strong class="text-white">Habitación #{{ object.habitacion.numero }}</strong>
+        </p>
+      </div>
+      {% endif %}
+
+      <!-- Datos del huésped -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <p class="text-sm font-semibold text-gray-300">Nombre</p>
+          <p class="bg-white/20 rounded-lg px-4 py-2 text-white">{{ object.nombre }}</p>
         </div>
-
-        <div class="card-body p-4 bg-light">
-          <!-- Aquí puedes mostrar la habitación si está presente -->
-          {% if object.habitacion %}
-            <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
-              <i class="bi bi-door-closed-fill me-2 fs-4"></i>
-              <div>
-                Registrando huésped para la <strong>Habitación {{ object.habitacion.numero }}</strong>
-              </div>
-            </div>
-          {% endif %}
-
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label for="nombre" class="form-label fw-semibold">Nombre</label>
-              <div class="form-control bg-light text-muted">{{ object.nombre }}</div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="apellido" class="form-label fw-semibold">Apellido</label>
-              <div class="form-control bg-light text-muted">{{ object.apellido }}</div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="tipo_documento" class="form-label fw-semibold">Tipo de Documento</label>
-              <div class="form-control bg-light text-muted">{{ object.tipo_documento }}</div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="numero_documento" class="form-label fw-semibold">Número de Documento</label>
-              <div class="form-control bg-light text-muted">{{ object.numero_documento }}</div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="correo_electronico" class="form-label fw-semibold">Correo Electrónico</label>
-              <div class="form-control bg-light text-muted">{{ object.correo_electronico }}</div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="telefono" class="form-label fw-semibold">Teléfono</label>
-              <div class="form-control bg-light text-muted">{{ object.telefono }}</div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="vehiculo" class="form-label fw-semibold">Vehículo</label>
-              <div class="form-control bg-light text-muted">{{ object.vehiculo }}</div>
-            </div>
-            <div class="col-md-6 mb-3">
-              <label for="placas" class="form-label fw-semibold">Placas</label>
-              <div class="form-control bg-light text-muted">{{ object.placas }}</div>
-            </div>
-          </div>
-
-          <div class="d-flex justify-content-between mt-4">
-            <a href="{% url 'huespedes:huesped_edit' pk=object.pk %}" class="btn btn-outline-secondary btn-lg rounded-pill">
-              <i class="bi bi-pencil-square me-2"></i> Editar
-            </a>
-            <a href="{% url 'huespedes:huesped_delete' pk=object.pk %}" class="btn btn-danger btn-lg rounded-pill">
-              <i class="bi bi-trash3 me-2"></i> Eliminar
-            </a>
-          </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-300">Apellido</p>
+          <p class="bg-white/20 rounded-lg px-4 py-2 text-white">{{ object.apellido }}</p>
         </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-300">Tipo Documento</p>
+          <p class="bg-white/20 rounded-lg px-4 py-2 text-white">{{ object.tipo_documento }}</p>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-300">Número Documento</p>
+          <p class="bg-white/20 rounded-lg px-4 py-2 text-white">{{ object.numero_documento }}</p>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-300">Correo</p>
+          <p class="bg-white/20 rounded-lg px-4 py-2 text-white">{{ object.correo_electronico }}</p>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-300">Teléfono</p>
+          <p class="bg-white/20 rounded-lg px-4 py-2 text-white">{{ object.telefono }}</p>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-300">Vehículo</p>
+          <p class="bg-white/20 rounded-lg px-4 py-2 text-white">{{ object.vehiculo }}</p>
+        </div>
+        <div>
+          <p class="text-sm font-semibold text-gray-300">Placas</p>
+          <p class="bg-white/20 rounded-lg px-4 py-2 text-white">{{ object.placas }}</p>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex flex-wrap justify-between gap-4 mt-8">
+        <a href="{% url 'huespedes:huesped_edit' pk=object.pk %}" 
+           class="flex-1 text-center px-6 py-3 bg-yellow-500 hover:bg-yellow-600 rounded-full font-semibold text-white shadow-lg transition">
+          ✏️ Editar
+        </a>
+        <a href="{% url 'huespedes:huesped_delete' pk=object.pk %}" 
+           class="flex-1 text-center px-6 py-3 bg-red-600 hover:bg-red-700 rounded-full font-semibold text-white shadow-lg transition">
+          🗑 Eliminar
+        </a>
       </div>
     </div>
   </div>

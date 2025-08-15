@@ -1,25 +1,37 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<div class="container mt-5">
-  <div class="card shadow-lg border-0 rounded-4 p-5 bg-light">
-    <div class="text-center mb-4">
-      <i class="bi bi-exclamation-triangle-fill text-danger display-4"></i>
-      <h2 class="mt-3 text-danger fw-bold">¿Estás segur@?</h2>
-      <p class="fs-5 text-dark-emphasis">
-        Esta acción eliminará al huésped 
-        <strong class="text-dark">{{ object.nombre }} {{ object.apellido }}</strong> de manera permanente. 
-        Esta decisión no se puede deshacer.
-      </p>
+<div class="py-16 px-6 flex justify-center">
+  <div class="w-full max-w-2xl bg-white/10 backdrop-blur rounded-2xl shadow-2xl border border-white/20 p-10 text-center animate__animated animate__fadeIn">
+
+    <!-- Icono -->
+    <div class="mb-6">
+      <i class="bi bi-exclamation-triangle-fill text-red-500 text-6xl"></i>
     </div>
 
-    <form method="post" class="d-flex justify-content-center gap-3">
+    <!-- Título -->
+    <h2 class="text-3xl font-extrabold text-red-400 mb-4">
+      ¿Estás segur@?
+    </h2>
+
+    <!-- Mensaje -->
+    <p class="text-gray-200 text-lg mb-8">
+      Esta acción eliminará al huésped 
+      <strong class="text-white">{{ object.nombre }} {{ object.apellido }}</strong> 
+      de manera permanente.<br>
+      <span class="italic text-gray-400">Esta decisión no se puede deshacer.</span>
+    </p>
+
+    <!-- Botones -->
+    <form method="post" class="flex flex-wrap justify-center gap-4">
       {% csrf_token %}
-      <button type="submit" class="btn btn-danger btn-lg px-4 shadow-sm">
-        <i class="bi bi-trash3 me-2"></i> Sí, eliminar
+      <button type="submit" 
+              class="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-full font-semibold text-white shadow-lg transition">
+        🗑 Sí, eliminar
       </button>
-      <a href="{% url 'huespedes:huesped_detail' pk=object.pk %}" class="btn btn-outline-secondary btn-lg px-4 shadow-sm">
-        <i class="bi bi-x-circle me-2"></i> Cancelar
+      <a href="{% url 'huespedes:huesped_detail' pk=object.pk %}" 
+         class="px-6 py-3 bg-gray-500 hover:bg-gray-600 rounded-full font-semibold text-white shadow-lg transition">
+        ❌ Cancelar
       </a>
     </form>
   </div>

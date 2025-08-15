@@ -29,7 +29,7 @@ class Huesped(models.Model):
     placas = models.CharField(max_length=10, blank=True, null=True)
     habitacion = models.ForeignKey(Habitacion, on_delete=models.CASCADE, related_name='huespedes')
     fecha_entrada = models.DateField(default=timezone.now)
-    fecha_salida = models.DateField()
+    fecha_salida = models.DateField(null=True, blank=True)  # ✅ Ahora puede estar vacío
 
     def __str__(self):
         return f'{self.nombre} {self.apellido}'
