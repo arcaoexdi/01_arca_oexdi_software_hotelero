@@ -2,100 +2,120 @@
 {% load widget_tweaks %}
 
 {% block content %}
-<div class="container mt-5">
-    <h1 class="mb-4 text-center text-light">{% if producto.pk %}Editar{% else %}Crear{% endif %} Producto</h1>
-    <div class="card shadow-lg p-4">
-        <form method="POST" enctype="multipart/form-data" id="productoForm">
-            {% csrf_token %}
-            
-            <!-- Nombre del Producto -->
-            <div class="mb-3">
-                <label for="id_nombre" class="form-label">Nombre del Producto</label>
-                {{ form.nombre|add_class:"form-control" }}
-                {% for error in form.nombre.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
+<div class="container py-16 px-6">
+  <!-- Título -->
+  <h1 class="text-center text-4xl font-extrabold text-gold drop-shadow mb-10">
+    {% if producto.pk %} ✏️ Editar Producto {% else %} ➕ Crear Producto {% endif %}
+  </h1>
 
-            <!-- Descripción -->
-            <div class="mb-3">
-                <label for="id_descripcion" class="form-label">Descripción</label>
-                {{ form.descripcion|add_class:"form-control" }}
-                {% for error in form.descripcion.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
+  <div class="max-w-3xl mx-auto bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-xl p-8">
+    <form method="POST" enctype="multipart/form-data" id="productoForm" class="space-y-6">
+      {% csrf_token %}
 
-            <!-- Precio -->
-            <div class="mb-3">
-                <label for="id_precio" class="form-label">Precio</label>
-                {{ form.precio|add_class:"form-control" }}
-                {% for error in form.precio.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
+      <!-- Nombre -->
+      <div>
+        <label for="id_nombre" class="block text-lg font-semibold text-white mb-2">
+          Nombre del Producto
+        </label>
+        {{ form.nombre|add_class:"form-control bg-dark text-white border-0 rounded-xl shadow-sm" }}
+        {% for error in form.nombre.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
 
-            <!-- Disponible (Checkbox) -->
-            <div class="form-check form-switch mb-3">
-                {{ form.disponible|add_class:"form-check-input" }}
-                <label for="id_disponible" class="form-check-label">¿Disponible para la venta?</label>
-                {% for error in form.disponible.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
+      <!-- Descripción -->
+      <div>
+        <label for="id_descripcion" class="block text-lg font-semibold text-white mb-2">
+          Descripción
+        </label>
+        {{ form.descripcion|add_class:"form-control bg-dark text-white border-0 rounded-xl shadow-sm" }}
+        {% for error in form.descripcion.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
 
-           <!-- Categoría existente -->
-            <div class="mb-3">
-                <label for="id_categoria" class="form-label">Categoría</label>
-                {{ form.categoria|add_class:"form-select" }}
-                {% if form.categoria.help_text %}
-                    <small class="form-text text-muted">{{ form.categoria.help_text }}</small>
-                {% endif %}
-                {% for error in form.categoria.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
+      <!-- Precio -->
+      <div>
+        <label for="id_precio" class="block text-lg font-semibold text-white mb-2">
+          Precio
+        </label>
+        {{ form.precio|add_class:"form-control bg-dark text-white border-0 rounded-xl shadow-sm" }}
+        {% for error in form.precio.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
 
-            <!-- Nueva categoría -->
-            <div class="mb-3">
-                <label for="id_nueva_categoria" class="form-label">Nueva categoría (opcional)</label>
-                {{ form.nueva_categoria|add_class:"form-control" }}
-                {% if form.nueva_categoria.help_text %}
-                    <small class="form-text text-muted">{{ form.nueva_categoria.help_text }}</small>
-                {% endif %}
-                {% for error in form.nueva_categoria.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-            </div>
+      <!-- Disponible -->
+      <div class="form-check form-switch">
+        {{ form.disponible|add_class:"form-check-input" }}
+        <label for="id_disponible" class="form-check-label text-white ms-2">
+          ¿Disponible para la venta?
+        </label>
+        {% for error in form.disponible.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
 
+      <!-- Categoría existente -->
+      <div>
+        <label for="id_categoria" class="block text-lg font-semibold text-white mb-2">
+          Categoría existente
+        </label>
+        {{ form.categoria|add_class:"form-select bg-dark text-white border-0 rounded-xl shadow-sm" }}
+        {% if form.categoria.help_text %}
+          <small class="text-gray-400">{{ form.categoria.help_text }}</small>
+        {% endif %}
+        {% for error in form.categoria.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
 
+      <!-- Nueva categoría -->
+      <div>
+        <label for="id_nueva_categoria" class="block text-lg font-semibold text-white mb-2">
+          Nueva categoría (opcional)
+        </label>
+        {{ form.nueva_categoria }}
+        {% if form.nueva_categoria.help_text %}
+          <small class="text-gray-400">{{ form.nueva_categoria.help_text }}</small>
+        {% endif %}
+        {% for error in form.nueva_categoria.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
 
-            <!-- Imagen -->
-            <div class="mb-3">
-                <label for="id_imagen" class="form-label">Imagen</label>
-                {{ form.imagen|add_class:"form-control" }}
-                <small class="form-text text-muted">{{ form.imagen.help_text }}</small>
-                {% for error in form.imagen.errors %}
-                    <div class="text-danger">{{ error }}</div>
-                {% endfor %}
-                {% if producto.imagen %}
-                    <div class="mt-3">
-                        <p class="fw-bold">Imagen actual:</p>
-                        <img src="{{ producto.imagen.url }}" alt="Imagen actual" class="img-thumbnail" style="max-height: 200px;">
-                    </div>
-                {% endif %}
-            </div>
+      <!-- Imagen -->
+      <div>
+        <label for="id_imagen" class="block text-lg font-semibold text-white mb-2">
+          Imagen
+        </label>
+        {{ form.imagen|add_class:"form-control bg-dark text-white border-0 rounded-xl shadow-sm" }}
+        <small class="text-gray-400">{{ form.imagen.help_text }}</small>
+        {% for error in form.imagen.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
 
-            <!-- Botones -->
-            <div class="d-flex justify-content-between mt-4">
-                <button type="submit" class="btn btn-success btn-lg w-48">
-                    <i class="bi bi-save me-2"></i>Guardar Producto
-                </button>
-                <a href="{% url 'productos:producto_list' %}" class="btn btn-secondary btn-lg w-48">
-                    <i class="bi bi-arrow-left-circle me-2"></i>Cancelar
-                </a>
-            </div>
-        </form>
-    </div>
+        {% if producto.imagen %}
+          <div class="mt-4 text-center">
+            <p class="text-white font-semibold mb-2">Imagen actual:</p>
+            <img src="{{ producto.imagen.url }}" alt="Imagen actual"
+                 class="rounded-xl shadow-md max-h-52 mx-auto">
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-center gap-6 mt-8 flex-wrap">
+        <button type="submit"
+                class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-full shadow-lg hover:scale-105 transition flex items-center gap-2 font-semibold">
+          <i class="bi bi-save"></i> Guardar
+        </button>
+        <a href="{% url 'productos:producto_list' %}"
+           class="border-2 border-gray-400 text-gray-300 px-8 py-3 rounded-full shadow hover:bg-gray-700 transition flex items-center gap-2 font-semibold">
+          <i class="bi bi-x-circle"></i> Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
 </div>
 {% endblock %}
