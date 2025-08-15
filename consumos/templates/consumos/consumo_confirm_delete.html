@@ -1,17 +1,49 @@
 {% extends 'base_generic.html' %}
+
 {% block content %}
-<div class="container">
-    <h2 class="text-center text-danger">¿Estás segur@ de eliminar este consumo?</h2>
-    <div class="card p-4">
-        <p><strong>Producto:</strong> {{ consumo.producto }}</p>
-        <p><strong>Huésped:</strong> {{ consumo.huesped }}</p>
-        <p><strong>Cantidad:</strong> {{ consumo.cantidad }}</p>
-        <p><strong>Fecha:</strong> {{ consumo.fecha }}</p>
-        <form method="post" class="mt-4 text-center">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">✅ Sí, eliminar</button>
-            <a href="{% url 'consumos:consumo_list' %}" class="btn btn-secondary">❌ Cancelar</a>
-        </form>
-    </div>
+<div class="py-16 px-6">
+  <!-- Icono y título -->
+  <div class="text-center mb-10">
+    <i class="bi bi-exclamation-triangle-fill text-red-500 text-6xl drop-shadow-lg"></i>
+    <h2 class="mt-4 text-3xl font-extrabold text-red-500 drop-shadow">
+      ¿Estás segur@ de eliminar este consumo?
+    </h2>
+    <p class="text-gray-300 mt-2">⚠️ Esta acción es irreversible</p>
+  </div>
+
+  <!-- Card con detalles -->
+  <div class="max-w-2xl mx-auto bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-xl p-8">
+    <ul class="space-y-3 text-lg">
+      <li class="flex justify-between bg-dark/30 p-3 rounded-lg">
+        <span class="font-semibold text-gold">🛒 Producto:</span>
+        <span class="text-white">{{ consumo.producto }}</span>
+      </li>
+      <li class="flex justify-between bg-dark/30 p-3 rounded-lg">
+        <span class="font-semibold text-gold">👤 Huésped:</span>
+        <span class="text-white">{{ consumo.huesped }}</span>
+      </li>
+      <li class="flex justify-between bg-dark/30 p-3 rounded-lg">
+        <span class="font-semibold text-gold">🔢 Cantidad:</span>
+        <span class="text-white">{{ consumo.cantidad }}</span>
+      </li>
+      <li class="flex justify-between bg-dark/30 p-3 rounded-lg">
+        <span class="font-semibold text-gold">📅 Fecha:</span>
+        <span class="text-white">{{ consumo.fecha|date:"d M Y H:i" }}</span>
+      </li>
+    </ul>
+
+    <!-- Botones -->
+    <form method="post" class="flex justify-center gap-4 mt-8 flex-wrap">
+      {% csrf_token %}
+      <button type="submit"
+        class="bg-red-600 text-white px-6 py-2 rounded-full font-semibold shadow hover:scale-105 hover:bg-red-700 transition">
+        ✅ Sí, eliminar
+      </button>
+      <a href="{% url 'consumos:consumo_list' %}"
+        class="bg-gray-500 text-white px-6 py-2 rounded-full font-semibold shadow hover:scale-105 hover:bg-gray-600 transition">
+        ❌ Cancelar
+      </a>
+    </form>
+  </div>
 </div>
 {% endblock %}

@@ -1,34 +1,51 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg rounded-4 border-0">
-                <div class="card-body p-5">
-                    <h2 class="text-center mb-4 fw-bold text-primary">🧾 Detalle del Consumo</h2>
+<div class="py-16 px-6">
+  <!-- Título -->
+  <div class="text-center mb-10">
+    <h2 class="text-4xl font-extrabold text-gold drop-shadow mb-2">
+      🧾 Detalle del Consumo
+    </h2>
+    <p class="text-gray-300">Información detallada de este registro</p>
+  </div>
 
-                    <ul class="list-group list-group-flush fs-5">
-                        <li class="list-group-item"><strong>👤 Huésped:</strong> {{ consumo.huesped }}</li>
-                        <li class="list-group-item"><strong>🛒 Producto:</strong> {{ consumo.producto }}</li>
-                        <li class="list-group-item"><strong>🔢 Cantidad:</strong> {{ consumo.cantidad }}</li>
-                        <li class="list-group-item"><strong>📅 Fecha:</strong> {{ consumo.fecha }}</li>
-                    </ul>
+  <!-- Card -->
+  <div class="max-w-2xl mx-auto bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-xl p-8">
+    <ul class="space-y-4 text-lg">
+      <li class="flex items-center justify-between bg-dark/30 p-4 rounded-lg">
+        <span class="font-semibold text-gold">👤 Huésped:</span>
+        <span class="text-white">{{ consumo.huesped }}</span>
+      </li>
+      <li class="flex items-center justify-between bg-dark/30 p-4 rounded-lg">
+        <span class="font-semibold text-gold">🛒 Producto:</span>
+        <span class="text-white">{{ consumo.producto }}</span>
+      </li>
+      <li class="flex items-center justify-between bg-dark/30 p-4 rounded-lg">
+        <span class="font-semibold text-gold">🔢 Cantidad:</span>
+        <span class="text-white">{{ consumo.cantidad }}</span>
+      </li>
+      <li class="flex items-center justify-between bg-dark/30 p-4 rounded-lg">
+        <span class="font-semibold text-gold">📅 Fecha:</span>
+        <span class="text-white">{{ consumo.fecha|date:"d M Y H:i" }}</span>
+      </li>
+    </ul>
 
-                    <div class="d-flex justify-content-center gap-3 mt-4">
-                        <a href="{% url 'consumos:consumo_update' consumo.pk %}" class="btn btn-outline-warning">
-                            ✏️ Editar
-                        </a>
-                        <a href="{% url 'consumos:consumo_delete' consumo.pk %}" class="btn btn-outline-danger">
-                            🗑 Eliminar
-                        </a>
-                        <a href="{% url 'consumos:consumo_list' %}" class="btn btn-outline-secondary">
-                            ↩️ Volver
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Botones -->
+    <div class="flex justify-center gap-4 mt-8 flex-wrap">
+      <a href="{% url 'consumos:consumo_update' consumo.pk %}"
+        class="bg-yellow-500 text-white px-6 py-2 rounded-full font-semibold shadow hover:scale-105 hover:bg-yellow-600 transition">
+        ✏️ Editar
+      </a>
+      <a href="{% url 'consumos:consumo_delete' consumo.pk %}"
+        class="bg-red-500 text-white px-6 py-2 rounded-full font-semibold shadow hover:scale-105 hover:bg-red-600 transition">
+        🗑 Eliminar
+      </a>
+      <a href="{% url 'consumos:consumo_list' %}"
+        class="bg-gray-500 text-white px-6 py-2 rounded-full font-semibold shadow hover:scale-105 hover:bg-gray-600 transition">
+        ↩️ Volver
+      </a>
     </div>
+  </div>
 </div>
 {% endblock %}
