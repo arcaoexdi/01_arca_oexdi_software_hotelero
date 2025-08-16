@@ -39,7 +39,7 @@ class Consumo(models.Model):
         """
         Calcula el total del consumo basado en la cantidad y el precio unitario del producto.
         """
-        return self.cantidad * self.producto.precio_unitario
+        return self.cantidad * self.producto.precio
 
     def save(self, *args, **kwargs):
         """

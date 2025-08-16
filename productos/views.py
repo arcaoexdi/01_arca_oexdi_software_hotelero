@@ -21,13 +21,19 @@ def producto_form(request, pk=None):
     else:
         producto = Producto()
 
-    # Si el formulario es enviado
     if request.method == 'POST':
-        # Asegurarse de incluir request.FILES para manejar archivos
+        # Incluir request.FILES para manejar archivos
         form = ProductoForm(request.POST, request.FILES, instance=producto)
+
+        # Ajuste para BooleanField 'disponible'
+        # Si no viene en POST, lo ponemos en False
+        if 'disponible' not in request.POST:
+            form.data = form.data.copy()
+            form.data['disponible'] = False
+
         if form.is_valid():
             producto = form.save()
-            # Verificar si la solicitud es AJAX para una respuesta rápida
+            # Respuesta AJAX
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'success': True, 'redirect_url': producto.get_absolute_url()})
             # Redirigir a la vista de detalle del producto
@@ -35,8 +41,8 @@ def producto_form(request, pk=None):
     else:
         form = ProductoForm(instance=producto)
     
-    # Renderizamos el formulario
     return render(request, 'productos/productos_form.html', {'form': form, 'producto': producto})
+
 
 # Vista de confirmación antes de eliminar el producto
 def producto_confirm(request, pk):

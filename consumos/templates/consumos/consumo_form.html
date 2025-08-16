@@ -18,61 +18,64 @@
 
       <!-- Habitación -->
       <div>
-        <label for="{{ form.habitacion.id_for_label }}" class="block text-sm font-semibold text-gold mb-2">
-          Habitación
-        </label>
-        <select id="id_habitacion" name="habitacion"
-          class="w-full px-4 py-2 rounded-lg border border-gold/40 focus:ring-2 focus:ring-gold focus:outline-none bg-white/80 text-dark"
-          required>
-          <option value="" disabled selected>Selecciona una habitación</option>
-          {% for habitacion in habitaciones %}
-            <option value="{{ habitacion.id }}" 
-              {% if form.habitacion.value == habitacion.id|stringformat:"s" %}selected{% endif %}>
-              Habitación #{{ habitacion.numero }} - {{ habitacion.get_estado_habitacion_display }}
-            </option>
-          {% endfor %}
-        </select>
-        {% if form.habitacion.errors %}
-          <p class="text-red-400 text-sm mt-1">
-            {% for error in form.habitacion.errors %} {{ error }} {% endfor %}
-          </p>
-        {% endif %}
+        <label for="{{ form.habitacion.id_for_label }}" class="block text-sm font-semibold text-gold mb-2">Habitación</label>
+        {% render_field form.habitacion class="w-full px-4 py-2 rounded-lg border border-gold/40 focus:ring-2 focus:ring-gold focus:outline-none bg-white/80 text-dark" %}
+        {% for error in form.habitacion.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
       </div>
 
       <!-- Huésped -->
       <div>
-        <label for="{{ form.huesped.id_for_label }}" class="block text-sm font-semibold text-gold mb-2">
-          Huésped
-        </label>
+        <label for="{{ form.huesped.id_for_label }}" class="block text-sm font-semibold text-gold mb-2">Huésped</label>
         {% render_field form.huesped class="w-full px-4 py-2 rounded-lg border border-gold/40 focus:ring-2 focus:ring-gold bg-white/80 text-dark" %}
+        {% for error in form.huesped.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
       </div>
 
       <!-- Producto -->
       <div>
-        <label for="{{ form.producto.id_for_label }}" class="block text-sm font-semibold text-gold mb-2">
-          Producto
-        </label>
-        {% render_field form.producto class="w-full px-4 py-2 rounded-lg border border-gold/40 focus:ring-2 focus:ring-gold bg-white/80 text-dark" %}
+        <label for="{{ form.producto.id_for_label }}" class="block text-sm font-semibold text-gold mb-2">Producto</label>
+        <select id="id_producto" name="{{ form.producto.html_name }}"
+                class="w-full px-4 py-2 rounded-lg border border-gold/40 focus:ring-2 focus:ring-gold bg-white/80 text-dark">
+          <option value="">Seleccione un producto</option>
+          {% for producto in productos %}
+            <option value="{{ producto.id }}"
+                    data-precio="{{ producto.precio }}"
+                    data-stock="{{ producto.cantidad }}"
+                    {% if form.producto.value == producto.id %}selected{% endif %}>
+              {{ producto.nombre }}
+            </option>
+          {% endfor %}
+        </select>
+        {% for error in form.producto.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
       </div>
 
-      <!-- Precio Producto -->
-      <div class="text-center">
-        <p class="text-sm text-gray-400">Precio actual:</p>
-        <p id="precioProducto" class="text-2xl font-bold text-green-500">
-          {% if form.producto.value %}
-            S/. {{ form.producto.selected_option.dataset.precio }}
-          {% else %}
-            S/. 0.00
-          {% endif %}
-        </p>
+      <!-- Precio y Stock -->
+      <div class="text-center mb-4">
+        <p class="text-sm text-gray-400">Precio actual: <span id="precioProducto" class="text-2xl font-bold text-green-500">S/. 0.00</span></p>
+        <p class="text-sm text-gray-400">Stock disponible: <span id="stockDisponible" class="text-2xl font-bold text-yellow-400">0</span></p>
       </div>
 
       <!-- Cantidad -->
       <div>
-        <label for="{{ form.cantidad.id_for_label }}" class="block text-sm font-semibold text-gold mb-2">
-          Cantidad
-        </label>
+        <label for="{{ form.cantidad.id_for_label }}" class="block text-sm font-semibold text-gold mb-2">Cantidad</label>
         {% render_field form.cantidad class="w-full px-4 py-2 rounded-lg border border-gold/40 focus:ring-2 focus:ring-gold bg-white/80 text-dark" %}
+        {% for error in form.cantidad.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Observaciones -->
+      <div>
+        <label for="{{ form.observaciones.id_for_label }}" class="block text-sm font-semibold text-gold mb-2">Observaciones</label>
+        {% render_field form.observaciones class="w-full px-4 py-2 rounded-lg border border-gold/40 focus:ring-2 focus:ring-gold bg-white/80 text-dark" %}
+        {% for error in form.observaciones.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+        {% endfor %}
       </div>
 
       <!-- Botones -->
@@ -93,14 +96,21 @@
 
 {% block extra_js %}
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     const productoSelect = document.getElementById('id_producto');
     const precioProducto = document.getElementById('precioProducto');
+    const stockDisponible = document.getElementById('stockDisponible');
 
-    productoSelect?.addEventListener('change', function () {
-      const precio = this.options[this.selectedIndex].dataset.precio || '0.00';
-      precioProducto.textContent = `S/. ${precio}`;
-    });
-  });
+    function actualizarInfoProducto() {
+        const selectedOption = productoSelect.options[productoSelect.selectedIndex];
+        const precio = selectedOption.dataset.precio || '0.00';
+        const stock = selectedOption.dataset.stock || '0';
+        precioProducto.textContent = `S/. ${precio}`;
+        stockDisponible.textContent = stock;
+    }
+
+    actualizarInfoProducto();
+    productoSelect?.addEventListener('change', actualizarInfoProducto);
+});
 </script>
 {% endblock %}

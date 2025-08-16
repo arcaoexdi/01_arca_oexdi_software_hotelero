@@ -45,8 +45,19 @@
         {% endfor %}
       </div>
 
+      <!-- Cantidad (opcional para consumo) -->
+      <div>
+        <label for="id_cantidad" class="block text-lg font-semibold text-white mb-2">
+          Cantidad disponible
+        </label>
+        <input type="number" name="cantidad" id="id_cantidad" min="0"
+               value="{{ producto.cantidad|default_if_none:0 }}"
+               class="form-control bg-dark text-white border-0 rounded-xl shadow-sm">
+        <small class="text-gray-400">Cantidad en stock del producto (para registrar consumos).</small>
+      </div>
+
       <!-- Disponible -->
-      <div class="form-check form-switch">
+      <div class="form-check form-switch mt-4">
         {{ form.disponible|add_class:"form-check-input" }}
         <label for="id_disponible" class="form-check-label text-white ms-2">
           ¿Disponible para la venta?
@@ -57,7 +68,7 @@
       </div>
 
       <!-- Categoría existente -->
-      <div>
+      <div class="mt-4">
         <label for="id_categoria" class="block text-lg font-semibold text-white mb-2">
           Categoría existente
         </label>
@@ -71,11 +82,11 @@
       </div>
 
       <!-- Nueva categoría -->
-      <div>
+      <div class="mt-4">
         <label for="id_nueva_categoria" class="block text-lg font-semibold text-white mb-2">
           Nueva categoría (opcional)
         </label>
-        {{ form.nueva_categoria }}
+        {{ form.nueva_categoria|add_class:"form-control bg-dark text-white border-0 rounded-xl shadow-sm" }}
         {% if form.nueva_categoria.help_text %}
           <small class="text-gray-400">{{ form.nueva_categoria.help_text }}</small>
         {% endif %}
@@ -85,12 +96,14 @@
       </div>
 
       <!-- Imagen -->
-      <div>
+      <div class="mt-4">
         <label for="id_imagen" class="block text-lg font-semibold text-white mb-2">
           Imagen
         </label>
         {{ form.imagen|add_class:"form-control bg-dark text-white border-0 rounded-xl shadow-sm" }}
-        <small class="text-gray-400">{{ form.imagen.help_text }}</small>
+        {% if form.imagen.help_text %}
+          <small class="text-gray-400">{{ form.imagen.help_text }}</small>
+        {% endif %}
         {% for error in form.imagen.errors %}
           <p class="text-red-400 text-sm mt-1">{{ error }}</p>
         {% endfor %}
